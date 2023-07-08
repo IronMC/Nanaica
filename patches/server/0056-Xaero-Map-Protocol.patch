@@ -12,17 +12,17 @@ index dc1c9c106593aed9ede4ea4a09dc085c89758cde..6c19d9b64830efe4b9d6f17d8ca92f88
          player.connection.send(new ClientboundInitializeBorderPacket(worldborder));
          player.connection.send(new ClientboundSetTimePacket(world.getGameTime(), world.getDayTime(), world.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)));
          player.connection.send(new ClientboundSetDefaultSpawnPositionPacket(world.getSharedSpawnPos(), world.getSharedSpawnAngle()));
-+        top.leavesmc.leaves.protocol.XaeroMapProtocol.onSendWorldInfo(player); // Leaves - xaero map protocol
++        top.Ironmc.Iron.protocol.XaeroMapProtocol.onSendWorldInfo(player); // Iron - xaero map protocol
          if (world.isRaining()) {
              // CraftBukkit start - handle player weather
              // entityplayer.connection.send(new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.START_RAINING, 0.0F));
-diff --git a/src/main/java/top/leavesmc/leaves/protocol/XaeroMapProtocol.java b/src/main/java/top/leavesmc/leaves/protocol/XaeroMapProtocol.java
+diff --git a/src/main/java/top/Ironmc/Iron/protocol/XaeroMapProtocol.java b/src/main/java/top/Ironmc/Iron/protocol/XaeroMapProtocol.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..01c370ec64835fdd038256560f89ed251b3d3d6d
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/protocol/XaeroMapProtocol.java
++++ b/src/main/java/top/Ironmc/Iron/protocol/XaeroMapProtocol.java
 @@ -0,0 +1,39 @@
-+package top.leavesmc.leaves.protocol;
++package top.Ironmc.Iron.protocol;
 +
 +import io.netty.buffer.Unpooled;
 +import net.minecraft.network.FriendlyByteBuf;
@@ -30,8 +30,8 @@ index 0000000000000000000000000000000000000000..01c370ec64835fdd038256560f89ed25
 +import net.minecraft.server.level.ServerPlayer;
 +import org.jetbrains.annotations.Contract;
 +import org.jetbrains.annotations.NotNull;
-+import top.leavesmc.leaves.LeavesConfig;
-+import top.leavesmc.leaves.util.ProtocolUtils;
++import top.Ironmc.Iron.IronConfig;
++import top.Ironmc.Iron.util.ProtocolUtils;
 +
 +public class XaeroMapProtocol {
 +
@@ -52,10 +52,10 @@ index 0000000000000000000000000000000000000000..01c370ec64835fdd038256560f89ed25
 +    }
 +
 +    public static void onSendWorldInfo(@NotNull ServerPlayer player) {
-+        if (LeavesConfig.xaeroMapProtocol) {
++        if (IronConfig.xaeroMapProtocol) {
 +            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 +            buf.writeByte(0);
-+            buf.writeInt(LeavesConfig.xaeroMapServerID);
++            buf.writeInt(IronConfig.xaeroMapServerID);
 +            ProtocolUtils.sendPayloadPacket(player, MINIMAP_KEY, buf);
 +            ProtocolUtils.sendPayloadPacket(player, WORLDMAP_KEY, buf);
 +        }

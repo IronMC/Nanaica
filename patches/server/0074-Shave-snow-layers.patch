@@ -25,8 +25,8 @@ index c7195f2e12bbd6545f7bffcc2b4ba5cc3d48df20..b8e160b78a9a6d4f73c9becef6ec0b17
              return InteractionResult.PASS;
          } else {
              Player player = context.getPlayer();
-+            // Leaves start - shaveSnowLayers
-+            if (top.leavesmc.leaves.LeavesConfig.shaveSnowLayers && blockState.is(Blocks.SNOW)) {
++            // Iron start - shaveSnowLayers
++            if (top.Ironmc.Iron.IronConfig.shaveSnowLayers && blockState.is(Blocks.SNOW)) {
 +                int layers = blockState.getValue(SnowLayerBlock.LAYERS);
 +                level.setBlock(blockPos, layers > 1 ? blockState.setValue(SnowLayerBlock.LAYERS, layers - 1) : Blocks.AIR.defaultBlockState(), 11);
 +                Block.popResource(level, blockPos, new ItemStack(EnchantmentHelper.hasSilkTouch(context.getItemInHand()) ? Items.SNOW : Items.SNOWBALL));
@@ -40,7 +40,7 @@ index c7195f2e12bbd6545f7bffcc2b4ba5cc3d48df20..b8e160b78a9a6d4f73c9becef6ec0b17
 +
 +                return InteractionResult.SUCCESS;
 +            }
-+            // Leaves end -  shaveSnowLayers
++            // Iron end -  shaveSnowLayers
              BlockState blockState2 = FLATTENABLES.get(blockState.getBlock());
              BlockState blockState3 = null;
              Runnable afterAction = null; // Paper

@@ -15,8 +15,8 @@ mcversion=$(prop mcVersion)
 gradleVersion=$(prop version)
 preVersion=$(prop preVersion)
 tagid="$mcversion-$commitid"
-jarName="leaves-$mcversion.jar"
-leavesid="Leaves-$commitid"
+jarName="Iron-$mcversion.jar"
+Ironid="Iron-$commitid"
 releaseinfo="releaseinfo.md"
 discordmes="discordmes.json"
 make_latest=$([ $preVersion = "true" ] && echo "false" || echo "true")
@@ -24,8 +24,8 @@ make_latest=$([ $preVersion = "true" ] && echo "false" || echo "true")
 rm -f $discordmes
 rm -f $releaseinfo
 
-mv build/libs/Leaves-paperclip-$gradleVersion-reobf.jar $jarName
-echo "name=$leavesid" >> $GITHUB_ENV
+mv build/libs/Iron-paperclip-$gradleVersion-reobf.jar $jarName
+echo "name=$Ironid" >> $GITHUB_ENV
 echo "tag=$tagid" >> $GITHUB_ENV
 echo "jar=$jarName" >> $GITHUB_ENV
 echo "info=$releaseinfo" >> $GITHUB_ENV
@@ -33,7 +33,7 @@ echo "discordmes=$discordmes" >> $GITHUB_ENV
 echo "pre=$preVersion" >> $GITHUB_ENV
 echo "make_latest=$make_latest" >> $GITHUB_ENV
 
-echo "$leavesid [![download](https://img.shields.io/github/downloads/LeavesMC/Leaves/$tagid/total?color=0)](https://github.com/LeavesMC/Leaves/releases/download/$tagid/$jarName)" >> $releaseinfo
+echo "$Ironid [![download](https://img.shields.io/github/downloads/IronMC/Iron/$tagid/total?color=0)](https://github.com/IronMC/Iron/releases/download/$tagid/$jarName)" >> $releaseinfo
 echo "=====" >> $releaseinfo
 echo "" >> $releaseinfo
 if [ $preVersion = "true" ]; then
@@ -53,6 +53,6 @@ echo "| ---- | ---- |" >> $releaseinfo
 echo "| MD5 | `md5 $jarName` |" >> $releaseinfo
 echo "| SHA1 | `sha1 $jarName` |" >> $releaseinfo
 
-echo -n "{\"content\":\"Leaves New Release\",\"embeds\":[{\"title\":\"$leavesid\",\"url\":\"https://github.com/LeavesMC/Leaves/releases/tag/$tagid\",\"fields\":[{\"name\":\"Changelog\",\"value\":\"" >> $discordmes
+echo -n "{\"content\":\"Iron New Release\",\"embeds\":[{\"title\":\"$Ironid\",\"url\":\"https://github.com/IronMC/Iron/releases/tag/$tagid\",\"fields\":[{\"name\":\"Changelog\",\"value\":\"" >> $discordmes
 echo -n $(git log --oneline --pretty='> [%h] %s\\n' -$number) >> $discordmes
 echo "\",\"inline\":true}]}]}" >> $discordmes

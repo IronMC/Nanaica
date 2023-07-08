@@ -13,7 +13,7 @@ index ae9b821d71d2868ba4eb3c73558fdcd6caf264e3..3b8f4c1883a00b4820e8b6fe3e727b5c
  
                          if (!(block.getBlock() instanceof BaseEntityBlock)) { // Containers get placed automatically
 -                            block.getBlock().onPlace(block, world, newblockposition, oldBlock, true, context); // Paper - pass context
-+                            if (!top.leavesmc.leaves.command.NoBlockUpdateCommand.isNoBlockUpdate()) block.getBlock().onPlace(block, world, newblockposition, oldBlock, true, context); // Paper - pass context // Leaves - no block update
++                            if (!top.Ironmc.Iron.command.NoBlockUpdateCommand.isNoBlockUpdate()) block.getBlock().onPlace(block, world, newblockposition, oldBlock, true, context); // Paper - pass context // Iron - no block update
                          }
  
                          world.notifyAndUpdatePhysics(newblockposition, null, oldBlock, block, world.getBlockState(newblockposition), updateFlag, 512); // send null chunk as chunk.k() returns false by this point
@@ -25,7 +25,7 @@ index 39669ad8e8895f1ff3e3a7e3ee1ab39c1b74b09d..c50fd02935870b0f660544efe3d05ea1
  
      @Override
      public void tick(Level world, BlockPos pos, FluidState state) {
-+        if (top.leavesmc.leaves.command.NoBlockUpdateCommand.isNoBlockUpdate()) return; // Leaves - no block update
++        if (top.Ironmc.Iron.command.NoBlockUpdateCommand.isNoBlockUpdate()) return; // Iron - no block update
          if (!state.isSource()) {
              FluidState fluid1 = this.getNewLiquid(world, pos, world.getBlockState(pos));
              int i = this.getSpreadDelay(world, pos, state, fluid1);
@@ -37,7 +37,7 @@ index ec81be70cd6f92bbf9011395cb361f0ce54c5ad0..cc12f8575b21c973842b14998af1d92c
      }
  
      private void addAndRun(BlockPos pos, CollectingNeighborUpdater.NeighborUpdates entry) {
-+        if (top.leavesmc.leaves.command.NoBlockUpdateCommand.isNoBlockUpdate()) return; // Leaves - no block update
++        if (top.Ironmc.Iron.command.NoBlockUpdateCommand.isNoBlockUpdate()) return; // Iron - no block update
          boolean bl = this.count > 0;
          boolean bl2 = this.maxChainedNeighborUpdates >= 0 && this.count >= this.maxChainedNeighborUpdates;
          ++this.count;
@@ -49,58 +49,58 @@ index 2708251ebc1995e71fb0e5dca9e158a3005f8a8a..e28351b379677fec356b6efec2d882ee
  
      @Override
      public void shapeUpdate(Direction direction, BlockState neighborState, BlockPos pos, BlockPos neighborPos, int flags, int maxUpdateDepth) {
-+        if (top.leavesmc.leaves.command.NoBlockUpdateCommand.isNoBlockUpdate()) return; // Leaves - no block update
++        if (top.Ironmc.Iron.command.NoBlockUpdateCommand.isNoBlockUpdate()) return; // Iron - no block update
          NeighborUpdater.executeShapeUpdate(this.level, direction, neighborState, pos, neighborPos, flags, maxUpdateDepth - 1);
      }
  
      @Override
      public void neighborChanged(BlockPos pos, Block sourceBlock, BlockPos sourcePos) {
-+        if (top.leavesmc.leaves.command.NoBlockUpdateCommand.isNoBlockUpdate()) return; // Leaves - no block update
++        if (top.Ironmc.Iron.command.NoBlockUpdateCommand.isNoBlockUpdate()) return; // Iron - no block update
          BlockState blockState = this.level.getBlockState(pos);
          this.neighborChanged(blockState, pos, sourceBlock, sourcePos, false);
      }
  
      @Override
      public void neighborChanged(BlockState state, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-+        if (top.leavesmc.leaves.command.NoBlockUpdateCommand.isNoBlockUpdate()) return; // Leaves - no block update
++        if (top.Ironmc.Iron.command.NoBlockUpdateCommand.isNoBlockUpdate()) return; // Iron - no block update
          NeighborUpdater.executeUpdate(this.level, state, pos, sourceBlock, sourcePos, notify);
      }
  }
-diff --git a/src/main/java/top/leavesmc/leaves/LeavesConfig.java b/src/main/java/top/leavesmc/leaves/LeavesConfig.java
+diff --git a/src/main/java/top/Ironmc/Iron/IronConfig.java b/src/main/java/top/Ironmc/Iron/IronConfig.java
 index a78e024492b075d3dacd0887cad78a65b34395e5..a63956a51def9c7ee0e1222a2536f3f29f8bb166 100644
---- a/src/main/java/top/leavesmc/leaves/LeavesConfig.java
-+++ b/src/main/java/top/leavesmc/leaves/LeavesConfig.java
+--- a/src/main/java/top/Ironmc/Iron/IronConfig.java
++++ b/src/main/java/top/Ironmc/Iron/IronConfig.java
 @@ -12,6 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
  import org.bukkit.configuration.file.YamlConfiguration;
- import top.leavesmc.leaves.bot.BotCommand;
- import top.leavesmc.leaves.bot.agent.Actions;
-+import top.leavesmc.leaves.command.NoBlockUpdateCommand;
- import top.leavesmc.leaves.profile.LeavesMinecraftSessionService;
- import top.leavesmc.leaves.protocol.syncmatica.SyncmaticaProtocol;
- import top.leavesmc.leaves.util.MathUtils;
-@@ -82,6 +83,10 @@ public final class LeavesConfig {
+ import top.Ironmc.Iron.bot.BotCommand;
+ import top.Ironmc.Iron.bot.agent.Actions;
++import top.Ironmc.Iron.command.NoBlockUpdateCommand;
+ import top.Ironmc.Iron.profile.IronMinecraftSessionService;
+ import top.Ironmc.Iron.protocol.syncmatica.SyncmaticaProtocol;
+ import top.Ironmc.Iron.util.MathUtils;
+@@ -82,6 +83,10 @@ public final class IronConfig {
              commands.put("bot", new BotCommand("bot"));
              Actions.registerAll();
          }
 +
-+        if (LeavesConfig.noBlockUpdateCommand) {
++        if (IronConfig.noBlockUpdateCommand) {
 +            commands.put("blockupdate", new NoBlockUpdateCommand("blockupdate"));
 +        }
      }
  
      public static void load(final YamlConfiguration config) {
-diff --git a/src/main/java/top/leavesmc/leaves/command/NoBlockUpdateCommand.java b/src/main/java/top/leavesmc/leaves/command/NoBlockUpdateCommand.java
+diff --git a/src/main/java/top/Ironmc/Iron/command/NoBlockUpdateCommand.java b/src/main/java/top/Ironmc/Iron/command/NoBlockUpdateCommand.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..0eacacf05033289ad2dec9f759d359c956321798
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/command/NoBlockUpdateCommand.java
++++ b/src/main/java/top/Ironmc/Iron/command/NoBlockUpdateCommand.java
 @@ -0,0 +1,37 @@
-+package top.leavesmc.leaves.command;
++package top.Ironmc.Iron.command;
 +
 +import org.bukkit.command.Command;
 +import org.bukkit.command.CommandSender;
 +import org.jetbrains.annotations.NotNull;
-+import top.leavesmc.leaves.LeavesConfig;
++import top.Ironmc.Iron.IronConfig;
 +
 +import java.util.List;
 +
@@ -129,6 +129,6 @@ index 0000000000000000000000000000000000000000..0eacacf05033289ad2dec9f759d359c9
 +    }
 +
 +    public static boolean isNoBlockUpdate() {
-+        return LeavesConfig.noBlockUpdateCommand && noBlockUpdate;
++        return IronConfig.noBlockUpdateCommand && noBlockUpdate;
 +    }
 +}

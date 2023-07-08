@@ -42,8 +42,8 @@ index a6ebb08a8f9681fd3a35de5d0e268f320e31ce1a..7c3c3a28a95c58caa83e283cdbb472b2
              }
          }
  
-+        // Leaves start - shears wrench
-+        if (top.leavesmc.leaves.LeavesConfig.redstoneShearsWrench && block instanceof ObserverBlock || block instanceof DispenserBlock ||
++        // Iron start - shears wrench
++        if (top.Ironmc.Iron.IronConfig.redstoneShearsWrench && block instanceof ObserverBlock || block instanceof DispenserBlock ||
 +            block instanceof PistonBaseBlock || block instanceof HopperBlock || block instanceof RepeaterBlock || block instanceof ComparatorBlock) {
 +            StateDefinition<Block, BlockState> blockstatelist = block.getStateDefinition();
 +            Property<?> iblockstate = blockstatelist.getProperty("facing");
@@ -75,12 +75,12 @@ index a6ebb08a8f9681fd3a35de5d0e268f320e31ce1a..7c3c3a28a95c58caa83e283cdbb472b2
 +            ShearsItem.message(player, Component.translatable("item.minecraft.debug_stick.update", iblockstate.getName(), ShearsItem.getNameHelper(iblockdata1, iblockstate)));
 +            return InteractionResult.CONSUME_PARTIAL;
 +        }
-+        // Leaves end - shears wrench
++        // Iron end - shears wrench
 +
          return super.useOn(context);
      }
 +
-+    // Leaves start - shears wrench
++    // Iron start - shears wrench
 +    private static <T extends Comparable<T>> BlockState cycleState(BlockState state, Property<T> property, boolean inverse) {
 +        return (BlockState) state.setValue(property, ShearsItem.getRelative(property.getPossibleValues(), state.getValue(property), inverse)); // CraftBukkit - decompile error
 +    }
@@ -96,5 +96,5 @@ index a6ebb08a8f9681fd3a35de5d0e268f320e31ce1a..7c3c3a28a95c58caa83e283cdbb472b2
 +    private static <T extends Comparable<T>> String getNameHelper(BlockState state, Property<T> property) {
 +        return property.getName(state.getValue(property));
 +    }
-+    // Leaves end - shears wrench
++    // Iron end - shears wrench
  }

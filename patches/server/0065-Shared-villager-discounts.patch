@@ -12,8 +12,8 @@ index 097007c1c25ba55d9916fc820dd1d1149d81f6f4..67c0a46b098d631b862df80511990c39
  
      public int getReputation(UUID target, Predicate<GossipType> gossipTypeFilter) {
          GossipContainer.EntityGossips entityGossips = this.gossips.get(target);
-+        // Leaves start - sharedVillagerDiscounts
-+        if (top.leavesmc.leaves.LeavesConfig.sharedVillagerDiscounts && gossipTypeFilter.test(GossipType.MAJOR_POSITIVE)) {
++        // Iron start - sharedVillagerDiscounts
++        if (top.Ironmc.Iron.IronConfig.sharedVillagerDiscounts && gossipTypeFilter.test(GossipType.MAJOR_POSITIVE)) {
 +            int otherRep = 0;
 +            if (entityGossips != null) {
 +                otherRep = entityGossips.weightedValue(v -> gossipTypeFilter.test(v) && !v.equals(GossipType.MAJOR_POSITIVE));
@@ -21,7 +21,7 @@ index 097007c1c25ba55d9916fc820dd1d1149d81f6f4..67c0a46b098d631b862df80511990c39
 +            int majorPositiveRep = this.gossips.values().stream().mapToInt(a -> a.weightedValue(v -> v.equals(GossipType.MAJOR_POSITIVE))).sum();
 +            return otherRep + Math.min(majorPositiveRep, GossipType.MAJOR_POSITIVE.max * GossipType.MAJOR_POSITIVE.weight);
 +        }
-+        // Leaves end - sharedVillagerDiscounts
++        // Iron end - sharedVillagerDiscounts
          return entityGossips != null ? entityGossips.weightedValue(gossipTypeFilter) : 0;
      }
  

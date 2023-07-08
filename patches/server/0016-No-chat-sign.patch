@@ -13,7 +13,7 @@ index 774fb97912f766589f3548f659618ad554e0503f..c5678071366c39ae642c8c1a638e3d4d
          private void sendToServer(final ChatType.Bound chatType, final @Nullable Function<Audience, net.minecraft.network.chat.Component> msgFunction) {
              final PlayerChatMessage toConsoleMessage = msgFunction == null ? ChatProcessor.this.message : ChatProcessor.this.message.withUnsignedContent(msgFunction.apply(ChatProcessor.this.server.console));
 -            ChatProcessor.this.server.logChatMessage(toConsoleMessage.decoratedContent(), chatType, ChatProcessor.this.server.getPlayerList().verifyChatTrusted(toConsoleMessage) ? null : "Not Secure");
-+            ChatProcessor.this.server.logChatMessage(toConsoleMessage.decoratedContent(), chatType, ChatProcessor.this.server.getPlayerList().verifyChatTrusted(toConsoleMessage) || top.leavesmc.leaves.LeavesConfig.noChatSign ? null : "Not Secure"); // Leaves - No Not Secure
++            ChatProcessor.this.server.logChatMessage(toConsoleMessage.decoratedContent(), chatType, ChatProcessor.this.server.getPlayerList().verifyChatTrusted(toConsoleMessage) || top.Ironmc.Iron.IronConfig.noChatSign ? null : "Not Secure"); // Iron - No Not Secure
          }
      }
  
@@ -25,7 +25,7 @@ index 72a8aa676836fcb3b4578689d16af65e18f55bbe..47a06936a4727c6209a7ad0fb8fb1099
      private static final int MAX_ARGUMENT_COUNT = 8;
      private static final int MAX_ARGUMENT_NAME_LENGTH = 16;
  
-+    // Leaves start - no chat sign
++    // Iron start - no chat sign
      public ArgumentSignatures(FriendlyByteBuf buf) {
 -        this(buf.readCollection(FriendlyByteBuf.limitValue(ArrayList::new, 8), ArgumentSignatures.Entry::new));
 +        this(readSign(buf));
@@ -33,9 +33,9 @@ index 72a8aa676836fcb3b4578689d16af65e18f55bbe..47a06936a4727c6209a7ad0fb8fb1099
  
 +    private static List<ArgumentSignatures.Entry> readSign(FriendlyByteBuf buf) {
 +        var entries = buf.readCollection(FriendlyByteBuf.limitValue(ArrayList::new, 8), Entry::new);
-+        return top.leavesmc.leaves.LeavesConfig.noChatSign ? List.of() : entries;
++        return top.Ironmc.Iron.IronConfig.noChatSign ? List.of() : entries;
 +    }
-+    // Leaves end - no chat sign
++    // Iron end - no chat sign
 +
      @Nullable
      public MessageSignature get(String argumentName) {
@@ -56,15 +56,15 @@ index 9938bb90bef84cf784f9a1ceb02a1a45aa8b48a1..923b77b9793369395f5f138ef03d8b48
      public <T> void writeJsonWithCodec(Codec<T> codec, T value) {
          DataResult<JsonElement> dataresult = codec.encodeStart(JsonOps.INSTANCE, value);
  
-+        // Leaves start - no chat sign
++        // Iron start - no chat sign
 +        if (codec == ServerStatus.CODEC) {
 +            JsonElement element = Util.getOrThrow(dataresult, string -> new EncoderException("Failed to encode: " + string + " " + value));
-+            element.getAsJsonObject().addProperty("preventsChatReports", top.leavesmc.leaves.LeavesConfig.noChatSign);
++            element.getAsJsonObject().addProperty("preventsChatReports", top.Ironmc.Iron.IronConfig.noChatSign);
 +
 +            this.writeUtf(GSON.toJson(element));
 +			return;
 +        }
-+        // Leaves end - no chat sign
++        // Iron end - no chat sign
 +
          this.writeUtf(FriendlyByteBuf.GSON.toJson((JsonElement) Util.getOrThrow(dataresult, (s) -> {
              return new EncoderException("Failed to encode: " + s + " " + value);
@@ -77,7 +77,7 @@ index d1d2fc0c57523c1abf1e8bfec913c78927c3dafc..50c1b722231c2add72663c475ae9068a
  import net.minecraft.network.protocol.Packet;
  
  public record ServerboundChatPacket(String message, Instant timeStamp, long salt, @Nullable MessageSignature signature, LastSeenMessages.Update lastSeenMessages) implements Packet<ServerGamePacketListener> {
-+    // Leaves start - no chat sign
++    // Iron start - no chat sign
      public ServerboundChatPacket(FriendlyByteBuf buf) {
 -        this(buf.readUtf(256), buf.readInstant(), buf.readLong(), buf.readNullable(MessageSignature::read), new LastSeenMessages.Update(buf));
 +        this(buf.readUtf(256), buf.readInstant(), buf.readLong(), buf.readNullable(ServerboundChatPacket::readSign), new LastSeenMessages.Update(buf));
@@ -86,9 +86,9 @@ index d1d2fc0c57523c1abf1e8bfec913c78927c3dafc..50c1b722231c2add72663c475ae9068a
 +    private static MessageSignature readSign(FriendlyByteBuf buf) {
 +        byte[] bs = new byte[256];
 +        buf.readBytes(bs);
-+        return top.leavesmc.leaves.LeavesConfig.noChatSign ? null : new MessageSignature(bs);
++        return top.Ironmc.Iron.IronConfig.noChatSign ? null : new MessageSignature(bs);
 +    }
-+    // Leaves end - no chat sign
++    // Iron end - no chat sign
 +
      @Override
      public void write(FriendlyByteBuf buf) {
@@ -101,11 +101,11 @@ index 9d6db4a378036559efab91c8b7dcf2a6b0c2cce6..2c349dc502ce275a8215766933f4855f
  
      @Override
      public void handle(ServerGamePacketListener listener) {
-+        // Leaves start - no chat report
-+        if (top.leavesmc.leaves.LeavesConfig.noChatSign) {
++        // Iron start - no chat report
++        if (top.Ironmc.Iron.IronConfig.noChatSign) {
 +            return;
 +        }
-+        // Leaves end - no chat report
++        // Iron end - no chat report
          listener.handleChatSessionUpdate(this);
      }
  }
@@ -118,7 +118,7 @@ index 3e3e11d4207172d6c24895cef6c7b5a0b09352ee..9e374eb89e28a5406784a38ec146ee31
          DedicatedServerProperties dedicatedserverproperties = this.getProperties();
  
 -        return dedicatedserverproperties.enforceSecureProfile && dedicatedserverproperties.onlineMode && this.services.profileKeySignatureValidator() != null;
-+        return dedicatedserverproperties.enforceSecureProfile && dedicatedserverproperties.onlineMode && this.services.profileKeySignatureValidator() != null && !top.leavesmc.leaves.LeavesConfig.noChatSign; // Leaves - No Secure profile;
++        return dedicatedserverproperties.enforceSecureProfile && dedicatedserverproperties.onlineMode && this.services.profileKeySignatureValidator() != null && !top.Ironmc.Iron.IronConfig.noChatSign; // Iron - No Secure profile;
      }
  
      protected boolean convertOldUsers() {
@@ -130,27 +130,27 @@ index 2a609e43370e68943c580083f7f7d8c9b0972955..2aeda591a182896f50edff099b042357
  
      @Override
      public void send(Packet<?> packet) {
-+        // Leaves start - no ClientboundPlayerChatHeaderPacket and rebuild ClientboundPlayerChatPacket
-+        if (top.leavesmc.leaves.LeavesConfig.noChatSign) {
++        // Iron start - no ClientboundPlayerChatHeaderPacket and rebuild ClientboundPlayerChatPacket
++        if (top.Ironmc.Iron.IronConfig.noChatSign) {
 +            if (packet instanceof ClientboundPlayerChatPacket chat) {
 +                packet = new ClientboundSystemChatPacket(chat.chatType().resolve(this.player.level().registryAccess())
 +                    .get().decorate(chat.unsignedContent() != null ? chat.unsignedContent()
 +                        : Component.literal(chat.body().content())), false);
 +            }
 +        }
-+        // Leaves end - no ClientboundPlayerChatHeaderPacket and rebuild ClientboundPlayerChatPacket
++        // Iron end - no ClientboundPlayerChatHeaderPacket and rebuild ClientboundPlayerChatPacket
          this.send(packet, (PacketSendListener) null);
      }
  
      public void send(Packet<?> packet, @Nullable PacketSendListener callbacks) {
-+        // Leaves start - no ClientboundPlayerChatHeaderPacket and rebuild ClientboundPlayerChatPacket
-+        if (top.leavesmc.leaves.LeavesConfig.noChatSign) {
++        // Iron start - no ClientboundPlayerChatHeaderPacket and rebuild ClientboundPlayerChatPacket
++        if (top.Ironmc.Iron.IronConfig.noChatSign) {
 +            if (packet instanceof ClientboundPlayerChatPacket chat && callbacks != null) {
 +                this.send(chat);
 +                return;
 +            }
 +        }
-+        // Leaves end - no ClientboundPlayerChatHeaderPacket and rebuild ClientboundPlayerChatPacket
++        // Iron end - no ClientboundPlayerChatHeaderPacket and rebuild ClientboundPlayerChatPacket
          // CraftBukkit start
          if (packet == null || this.processedDisconnect) { // Spigot
              return;
@@ -163,7 +163,7 @@ index c09c25b6594d4f6a937c6bbb80a75977940865dc..3088709b9dc3f46ec34f3ad16a43883f
  
      public boolean verifyChatTrusted(PlayerChatMessage message) { // Paper - private -> public
 -        return message.hasSignature() && !message.hasExpiredServer(Instant.now());
-+        return top.leavesmc.leaves.LeavesConfig.noChatSign || (message.hasSignature() && !message.hasExpiredServer(Instant.now())); // Leaves - No Not Secure
++        return top.Ironmc.Iron.IronConfig.noChatSign || (message.hasSignature() && !message.hasExpiredServer(Instant.now())); // Iron - No Not Secure
      }
  
      // CraftBukkit start

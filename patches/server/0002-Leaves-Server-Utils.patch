@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: violetc <58360096+s-yh-china@users.noreply.github.com>
 Date: Tue, 13 Sep 2022 16:59:31 +0800
-Subject: [PATCH] Leaves Server Utils
+Subject: [PATCH] Iron Server Utils
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/util/misc/AreaMap.java b/src/main/java/com/destroystokyo/paper/util/misc/AreaMap.java
@@ -13,7 +13,7 @@ index 41b9405d6759d865e0d14dd4f95163e9690e967d..67008112e1d1c059938838c544f093fa
      // we use linked for better iteration.
      // map of: coordinate to set of objects in coordinate
 -    protected final Long2ObjectOpenHashMap<PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<E>> areaMap = new Long2ObjectOpenHashMap<>(1024, 0.7f);
-+    protected Long2ObjectOpenHashMap<PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<E>> areaMap = new Long2ObjectOpenHashMap<>(1024, 0.7f); // Leaves - not final
++    protected Long2ObjectOpenHashMap<PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<E>> areaMap = new Long2ObjectOpenHashMap<>(1024, 0.7f); // Iron - not final
      protected final PooledLinkedHashSets<E> pooledHashSets;
  
      protected final ChangeCallback<E> addCallback;
@@ -26,7 +26,7 @@ index 46954db7ecd35ac4018fdf476df7c8020d7ce6c8..044c51ebb058fc36074fd178929e3279
   * @author Spottedleaf
   */
 -public final class PlayerAreaMap extends AreaMap<ServerPlayer> {
-+public class PlayerAreaMap extends AreaMap<ServerPlayer> { // Leaves - not final
++public class PlayerAreaMap extends AreaMap<ServerPlayer> { // Iron - not final
  
      public PlayerAreaMap() {
          super();
@@ -38,7 +38,7 @@ index 3ffb92a82e17af467afb18c81accc482a93d6a6f..499fb6aa4c264f51b9ce2acd9988cd16
      private UUID originWorld;
      public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
      public boolean collidingWithWorldBorder; // Paper
-+    private CompoundTag leavesData = new CompoundTag(); // Leaves - Leaves ex data
++    private CompoundTag IronData = new CompoundTag(); // Iron - Iron ex data
  
      public void setOrigin(@javax.annotation.Nonnull Location location) {
          this.origin = location.toVector();
@@ -46,7 +46,7 @@ index 3ffb92a82e17af467afb18c81accc482a93d6a6f..499fb6aa4c264f51b9ce2acd9988cd16
                  nbt.putBoolean("Paper.FreezeLock", true);
              }
              // Paper end
-+            nbt.put("Leaves.Data", leavesData); // Leaves - leaves ex data
++            nbt.put("Iron.Data", IronData); // Iron - Iron ex data
              return nbt;
          } catch (Throwable throwable) {
              CrashReport crashreport = CrashReport.forThrowable(throwable, "Saving entity NBT");
@@ -54,11 +54,11 @@ index 3ffb92a82e17af467afb18c81accc482a93d6a6f..499fb6aa4c264f51b9ce2acd9988cd16
                  freezeLocked = nbt.getBoolean("Paper.FreezeLock");
              }
              // Paper end
-+            // Leaves start - leaves ex data
-+            if (nbt.contains("Leaves.Data")) {
-+                leavesData = nbt.getCompound("Leaves.Data");
++            // Iron start - Iron ex data
++            if (nbt.contains("Iron.Data")) {
++                IronData = nbt.getCompound("Iron.Data");
 +            }
-+            // Leaves end - leaves ex data
++            // Iron end - Iron ex data
  
          } catch (Throwable throwable) {
              CrashReport crashreport = CrashReport.forThrowable(throwable, "Loading entity NBT");
@@ -67,44 +67,44 @@ index 3ffb92a82e17af467afb18c81accc482a93d6a6f..499fb6aa4c264f51b9ce2acd9988cd16
      }
      // Paper end
 +
-+    // Leaves start - leaves ex data
-+    public CompoundTag getLeavesData() {
-+        return leavesData;
++    // Iron start - Iron ex data
++    public CompoundTag getIronData() {
++        return IronData;
 +    }
-+    // Leaves end - leaves ex data
++    // Iron end - Iron ex data
  }
-diff --git a/src/main/java/top/leavesmc/leaves/LeavesLogger.java b/src/main/java/top/leavesmc/leaves/LeavesLogger.java
+diff --git a/src/main/java/top/Ironmc/Iron/IronLogger.java b/src/main/java/top/Ironmc/Iron/IronLogger.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..890b91a95719f18a75bc2c2176ef5cb9f2bf4274
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/LeavesLogger.java
++++ b/src/main/java/top/Ironmc/Iron/IronLogger.java
 @@ -0,0 +1,16 @@
-+package top.leavesmc.leaves;
++package top.Ironmc.Iron;
 +
 +import org.bukkit.Bukkit;
 +
 +import java.util.logging.Level;
 +import java.util.logging.Logger;
 +
-+public class LeavesLogger extends Logger {
-+    public static final LeavesLogger LOGGER = new LeavesLogger();
++public class IronLogger extends Logger {
++    public static final IronLogger LOGGER = new IronLogger();
 +
-+    private LeavesLogger() {
-+        super("Leaves", null);
++    private IronLogger() {
++        super("Iron", null);
 +        setParent(Bukkit.getLogger());
 +        setLevel(Level.ALL);
 +    }
 +}
-diff --git a/src/main/java/top/leavesmc/leaves/util/AsyncExecutor.java b/src/main/java/top/leavesmc/leaves/util/AsyncExecutor.java
+diff --git a/src/main/java/top/Ironmc/Iron/util/AsyncExecutor.java b/src/main/java/top/Ironmc/Iron/util/AsyncExecutor.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..0c03f3f051eff7abaacfaa8adb992811f934b9c8
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/util/AsyncExecutor.java
++++ b/src/main/java/top/Ironmc/Iron/util/AsyncExecutor.java
 @@ -0,0 +1,76 @@
-+package top.leavesmc.leaves.util;
++package top.Ironmc.Iron.util;
 +
 +import com.google.common.collect.Queues;
-+import top.leavesmc.leaves.LeavesLogger;
++import top.Ironmc.Iron.IronLogger;
 +
 +import java.util.Queue;
 +import java.util.concurrent.locks.Condition;
@@ -155,7 +155,7 @@ index 0000000000000000000000000000000000000000..0c03f3f051eff7abaacfaa8adb992811
 +            } catch (InterruptedException e) {
 +                Thread.currentThread().interrupt();
 +            } catch (Exception e) {
-+                LeavesLogger.LOGGER.log(Level.SEVERE, e, () -> "Failed to execute async job for thread " + thread.getName());
++                IronLogger.LOGGER.log(Level.SEVERE, e, () -> "Failed to execute async job for thread " + thread.getName());
 +            }
 +        }
 +    }
@@ -177,13 +177,13 @@ index 0000000000000000000000000000000000000000..0c03f3f051eff7abaacfaa8adb992811
 +        }
 +    }
 +}
-diff --git a/src/main/java/top/leavesmc/leaves/util/AsyncPlayerAreaMap.java b/src/main/java/top/leavesmc/leaves/util/AsyncPlayerAreaMap.java
+diff --git a/src/main/java/top/Ironmc/Iron/util/AsyncPlayerAreaMap.java b/src/main/java/top/Ironmc/Iron/util/AsyncPlayerAreaMap.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..4ccc1b3b29e9d62526b2d7c56ef06db77704bf80
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/util/AsyncPlayerAreaMap.java
++++ b/src/main/java/top/Ironmc/Iron/util/AsyncPlayerAreaMap.java
 @@ -0,0 +1,32 @@
-+package top.leavesmc.leaves.util;
++package top.Ironmc.Iron.util;
 +
 +import com.destroystokyo.paper.util.misc.PlayerAreaMap;
 +import com.destroystokyo.paper.util.misc.PooledLinkedHashSets;
@@ -215,13 +215,13 @@ index 0000000000000000000000000000000000000000..4ccc1b3b29e9d62526b2d7c56ef06db7
 +        this.areaMap = new Long2ObjectOpenHashMapWrapper<>(new ConcurrentHashMap<>(1024, 0.7f));
 +    }
 +}
-diff --git a/src/main/java/top/leavesmc/leaves/util/IterableWrapper.java b/src/main/java/top/leavesmc/leaves/util/IterableWrapper.java
+diff --git a/src/main/java/top/Ironmc/Iron/util/IterableWrapper.java b/src/main/java/top/Ironmc/Iron/util/IterableWrapper.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..0dc58b78c84a825ec7025534cd0fc7be9c4610ad
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/util/IterableWrapper.java
++++ b/src/main/java/top/Ironmc/Iron/util/IterableWrapper.java
 @@ -0,0 +1,21 @@
-+package top.leavesmc.leaves.util;
++package top.Ironmc.Iron.util;
 +
 +import org.jetbrains.annotations.NotNull;
 +
@@ -242,13 +242,13 @@ index 0000000000000000000000000000000000000000..0dc58b78c84a825ec7025534cd0fc7be
 +        return iterator;
 +    }
 +}
-diff --git a/src/main/java/top/leavesmc/leaves/util/Long2ObjectOpenHashMapWrapper.java b/src/main/java/top/leavesmc/leaves/util/Long2ObjectOpenHashMapWrapper.java
+diff --git a/src/main/java/top/Ironmc/Iron/util/Long2ObjectOpenHashMapWrapper.java b/src/main/java/top/Ironmc/Iron/util/Long2ObjectOpenHashMapWrapper.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..b684d8f576acbc5de8d06b0ff779c257198bc32d
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/util/Long2ObjectOpenHashMapWrapper.java
++++ b/src/main/java/top/Ironmc/Iron/util/Long2ObjectOpenHashMapWrapper.java
 @@ -0,0 +1,41 @@
-+package top.leavesmc.leaves.util;
++package top.Ironmc.Iron.util;
 +
 +import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 +import org.jetbrains.annotations.Nullable;
@@ -289,13 +289,13 @@ index 0000000000000000000000000000000000000000..b684d8f576acbc5de8d06b0ff779c257
 +        return backingMap.size();
 +    }
 +}
-diff --git a/src/main/java/top/leavesmc/leaves/util/ProtocolUtils.java b/src/main/java/top/leavesmc/leaves/util/ProtocolUtils.java
+diff --git a/src/main/java/top/Ironmc/Iron/util/ProtocolUtils.java b/src/main/java/top/Ironmc/Iron/util/ProtocolUtils.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..a29da205e542edb0400b8c5db76dc97cff015b8c
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/util/ProtocolUtils.java
++++ b/src/main/java/top/Ironmc/Iron/util/ProtocolUtils.java
 @@ -0,0 +1,19 @@
-+package top.leavesmc.leaves.util;
++package top.Ironmc.Iron.util;
 +
 +import net.minecraft.network.FriendlyByteBuf;
 +import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;

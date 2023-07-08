@@ -13,6 +13,6 @@ index 518d85a13c37a2f7d32ca0718323181048559986..881d661326cbca3c5340a33a990f1227
      @Override
      public boolean checkCompatibility(Enchantment other) {
 -        return other instanceof MendingEnchantment ? false : super.checkCompatibility(other);
-+        return (!top.leavesmc.leaves.LeavesConfig.mendingCompatibilityInfinity && other instanceof MendingEnchantment) ? false : super.checkCompatibility(other); // Leaves - mendingCompatibilityInfinity
++        return (!top.Ironmc.Iron.IronConfig.mendingCompatibilityInfinity && other instanceof MendingEnchantment) ? false : super.checkCompatibility(other); // Iron - mendingCompatibilityInfinity
      }
  }

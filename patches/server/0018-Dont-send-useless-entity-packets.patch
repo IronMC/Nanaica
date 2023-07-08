@@ -13,7 +13,7 @@ index 6670e657e08e130f7e0368f418379fd1ece00cdf..bd520b2f298ac7e9210532e7e7aca476
                              flag4 = true;
                              flag5 = true;
                          }
-+                        // Leaves end - Better checking
++                        // Iron end - Better checking
                      } else {
                          this.wasOnGround = this.entity.onGround();
                          this.teleportDelay = 0;
@@ -21,11 +21,11 @@ index 6670e657e08e130f7e0368f418379fd1ece00cdf..bd520b2f298ac7e9210532e7e7aca476
                          flag4 = true;
                          flag5 = true;
                      }
-+                    // Leaves start - dont send useless entity packets
-+                    if (top.leavesmc.leaves.LeavesConfig.dontSendUselessEntityPackets && isUselessPacket(packet1)) {
++                    // Iron start - dont send useless entity packets
++                    if (top.Ironmc.Iron.IronConfig.dontSendUselessEntityPackets && isUselessPacket(packet1)) {
 +                        packet1 = null;
 +                    }
-+                    // Leaves end - dont send useless entity packets
++                    // Iron end - dont send useless entity packets
                  }
  
                  if ((this.trackDelta || this.entity.hasImpulse || this.entity instanceof LivingEntity && ((LivingEntity) this.entity).isFallFlying()) && this.tickCount > 0) {
@@ -33,7 +33,7 @@ index 6670e657e08e130f7e0368f418379fd1ece00cdf..bd520b2f298ac7e9210532e7e7aca476
          });
      }
  
-+    // Leaves start - dont send useless entity packets
++    // Iron start - dont send useless entity packets
 +    private boolean isUselessPacket(Packet<?> possibleUselessPacket) {
 +        if (possibleUselessPacket instanceof ClientboundMoveEntityPacket packet) {
 +            if (possibleUselessPacket instanceof ClientboundMoveEntityPacket.Pos) {
@@ -46,7 +46,7 @@ index 6670e657e08e130f7e0368f418379fd1ece00cdf..bd520b2f298ac7e9210532e7e7aca476
 +        }
 +        return false;
 +    }
-+    // Leaves end - dont send useless entity packets
++    // Iron end - dont send useless entity packets
 +
      public void removePairing(ServerPlayer player) {
          this.entity.stopSeenByPlayer(player);

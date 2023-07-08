@@ -13,7 +13,7 @@ index afecf33c1df964decad84636c4e588369ad5ea8a..5094a84eab7109b138b5b44562c1ee9b
          this.stuckSpeedMultiplier = Vec3.ZERO;
          this.nextStep = 1.0F;
 -        this.random = SHARED_RANDOM; // Paper
-+        this.random = top.leavesmc.leaves.LeavesConfig.useVanillaRandom ? RandomSource.create() : SHARED_RANDOM; // Paper // Leaves - vanilla plz
++        this.random = top.Ironmc.Iron.IronConfig.useVanillaRandom ? RandomSource.create() : SHARED_RANDOM; // Paper // Iron - vanilla plz
          this.remainingFireTicks = -this.getFireImmuneTicks();
          this.fluidHeight = new Object2DoubleArrayMap(2);
          this.fluidOnEyes = new HashSet();
@@ -26,7 +26,7 @@ index f60c4cd0543fd5d50fa7e2c1a9e8381227adb540..8c9c694744951dc11b9f8828f27e4d4a
      public Squid(EntityType<? extends Squid> type, Level world) {
          super(type, world);
 -        //this.random.setSeed((long)this.getId()); // Paper - we set the random to shared, do not clobber the seed
-+        if (top.leavesmc.leaves.LeavesConfig.useVanillaRandom) this.random.setSeed(this.getId()); // Paper - we set the random to shared, do not clobber the seed // Leaves - vanilla plz
++        if (top.Ironmc.Iron.IronConfig.useVanillaRandom) this.random.setSeed(this.getId()); // Paper - we set the random to shared, do not clobber the seed // Iron - vanilla plz
          this.tentacleSpeed = 1.0F / (this.random.nextFloat() + 1.0F) * 0.2F;
      }
  

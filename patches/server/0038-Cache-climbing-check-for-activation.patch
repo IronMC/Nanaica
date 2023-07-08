@@ -13,12 +13,12 @@ index ef324b40917b3abf3b3d25dda3c8c258bdbc443e..dfce80a9e4736f8545d20713ebd4d4d0
          return this.lastClimbablePos;
      }
  
-+    // Leaves start - cache climbing check
++    // Iron start - cache climbing check
 +    private boolean cachedOnClimable = false;
 +    private BlockPos lastClimbingPosition = null;
 +
 +    public boolean onClimableCached() {
-+        if (!top.leavesmc.leaves.LeavesConfig.cacheClimbCheck) {
++        if (!top.Ironmc.Iron.IronConfig.cacheClimbCheck) {
 +            return this.onClimbable();
 +        }
 +        if (!this.blockPosition().equals(this.lastClimbingPosition)) {
@@ -27,7 +27,7 @@ index ef324b40917b3abf3b3d25dda3c8c258bdbc443e..dfce80a9e4736f8545d20713ebd4d4d0
 +        }
 +        return this.cachedOnClimable;
 +    }
-+    // Leaves end - cache climbing check
++    // Iron end - cache climbing check
 +
      public boolean onClimbable() {
          if (this.isSpectator()) {
@@ -41,7 +41,7 @@ index eda7f0bb42f7269676d5d2193e1155912ede9920..0f7064f3fa0c0d1842c92535cf6ee30f
          {
              LivingEntity living = (LivingEntity) entity;
 -            if ( living.onClimbable() || living.jumping || living.hurtTime > 0 || living.activeEffects.size() > 0 ) // Paper
-+            if ( living.onClimableCached() || living.jumping || living.hurtTime > 0 || living.activeEffects.size() > 0 ) // Paper // Leaves - use cached
++            if ( living.onClimableCached() || living.jumping || living.hurtTime > 0 || living.activeEffects.size() > 0 ) // Paper // Iron - use cached
              {
                  return 1; // Paper
              }

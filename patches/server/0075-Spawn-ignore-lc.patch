@@ -20,8 +20,8 @@ index 4327ec0948fb82939272f2dc1bbde8b1e090c5b7..35c8004c4228957d18edf305060a5545
      }
      public static int spawnCategoryForChunk(MobCategory group, ServerLevel world, LevelChunk chunk, NaturalSpawner.SpawnPredicate checker, NaturalSpawner.AfterSpawnCallback runner, int maxSpawns, Consumer<Entity> trackEntity) {
          // Paper end - add parameters and int ret type
-+        // Leaves start - ignore lc
-+        if (top.leavesmc.leaves.LeavesConfig.ignoreLC) {
++        // Iron start - ignore lc
++        if (top.Ironmc.Iron.IronConfig.ignoreLC) {
 +            int spawnN = 0;
 +            for (int i = chunk.getMinBuildHeight(); i < chunk.getMaxBuildHeight(); i += 16) {
 +                LevelChunkSection section = chunk.getSections()[chunk.getSectionIndex(i)];
@@ -32,7 +32,7 @@ index 4327ec0948fb82939272f2dc1bbde8b1e090c5b7..35c8004c4228957d18edf305060a5545
 +            }
 +            return spawnN;
 +        }
-+        // Leaves stop - ignore lc
++        // Iron stop - ignore lc
          BlockPos blockposition = NaturalSpawner.getRandomPosWithin(world, chunk);
  
          if (blockposition.getY() >= world.getMinBuildHeight() + 1) {
@@ -40,7 +40,7 @@ index 4327ec0948fb82939272f2dc1bbde8b1e090c5b7..35c8004c4228957d18edf305060a5545
          return 0; // Paper
      }
  
-+    // Leaves start - ignore lc
++    // Iron start - ignore lc
 +    private static BlockPos getRandomPosInChunk(Level world, LevelChunk chunk) {
 +        ChunkPos chunkPos = chunk.getPos();
 +        int x = chunkPos.getMinBlockX() + world.random.nextInt(16);
@@ -48,7 +48,7 @@ index 4327ec0948fb82939272f2dc1bbde8b1e090c5b7..35c8004c4228957d18edf305060a5545
 +        int y = world.random.nextInt(16) + 1;
 +        return new BlockPos(x, y, z);
 +    }
-+    // Leaves stop - ignore lc
++    // Iron stop - ignore lc
 +
      @VisibleForDebug
      public static void spawnCategoryForPosition(MobCategory group, ServerLevel world, BlockPos pos) {

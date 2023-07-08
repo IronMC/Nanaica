@@ -14,10 +14,10 @@ index bf05f321373c9cb5d42fd6cace010a75dc98b90a..c47df8d18be8ac7d32a16e6662dbbd85
  
                              gameprofilerfiller.push("tick");
 -                            this.guardEntityTick(this::tickNonPassenger, entity);
-+                            // Leaves start - copied from this.guardEntityTick
-+                            if (top.leavesmc.leaves.LeavesConfig.removeTickGuardLambda) {
++                            // Iron start - copied from this.guardEntityTick
++                            if (top.Ironmc.Iron.IronConfig.removeTickGuardLambda) {
 +                                try {
-+                                    this.tickNonPassenger(entity); // Leaves - changed
++                                    this.tickNonPassenger(entity); // Iron - changed
 +                                    MinecraftServer.getServer().executeMidTickTasks(); // Tuinity - execute chunk tasks mid tick
 +                                } catch (Throwable throwable) {
 +                                    if (throwable instanceof ThreadDeath) throw throwable; // Paper
@@ -31,7 +31,7 @@ index bf05f321373c9cb5d42fd6cace010a75dc98b90a..c47df8d18be8ac7d32a16e6662dbbd85
 +                            } else {
 +                                this.guardEntityTick(this::tickNonPassenger, entity);
 +                            }
-+                            // Leaves end - copied from this.guardEntityTick
++                            // Iron end - copied from this.guardEntityTick
                              gameprofilerfiller.pop();
                          }
                      }

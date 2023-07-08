@@ -5,11 +5,11 @@ Subject: [PATCH] Multithreaded Tracker
 
 This patch is Powered by Pufferfish(https://github.com/pufferfish-gg/Pufferfish)
 
-diff --git a/src/main/java/top/leavesmc/leaves/LeavesConfig.java b/src/main/java/top/leavesmc/leaves/LeavesConfig.java
+diff --git a/src/main/java/top/Ironmc/Iron/IronConfig.java b/src/main/java/top/Ironmc/Iron/IronConfig.java
 index 3379d39526512c40650784414e81aaa0d4a2dfca..2a41ea2d7b52b17015e6a5ffc05044bd9d46a504 100644
---- a/src/main/java/top/leavesmc/leaves/LeavesConfig.java
-+++ b/src/main/java/top/leavesmc/leaves/LeavesConfig.java
-@@ -255,7 +255,7 @@ public final class LeavesConfig {
+--- a/src/main/java/top/Ironmc/Iron/IronConfig.java
++++ b/src/main/java/top/Ironmc/Iron/IronConfig.java
+@@ -255,7 +255,7 @@ public final class IronConfig {
          dontSendUselessEntityPackets = getBoolean("settings.performance.dont-send-useless-entity-packets", dontSendUselessEntityPackets);
      }
  

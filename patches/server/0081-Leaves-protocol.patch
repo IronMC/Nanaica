@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: violetc <58360096+s-yh-china@users.noreply.github.com>
 Date: Fri, 7 Jul 2023 16:50:06 +0800
-Subject: [PATCH] Leaves protocol
+Subject: [PATCH] Iron protocol
 
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
@@ -9,20 +9,20 @@ index 5b03b63653c6b5586fb8d6ac7766beadb8ce04a9..fc9b8f6e9dbef606ade0f2376a8187ae
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -366,6 +366,7 @@ public abstract class PlayerList {
-         top.leavesmc.leaves.protocol.AppleSkinProtocol.onPlayerLoggedIn(player); // Leaves - appleskin
-         top.leavesmc.leaves.protocol.CarpetServerProtocol.onPlayerJoin(player); // Leaves - carpet
-         top.leavesmc.leaves.protocol.bladeren.MsptSyncProtocol.onPlayerJoin(player); // Leaves - mspt sync
-+        top.leavesmc.leaves.protocol.bladeren.LeavesProtocol.onPlayerJoin(player); // Leaves - leaves protocol
+         top.Ironmc.Iron.protocol.AppleSkinProtocol.onPlayerLoggedIn(player); // Iron - appleskin
+         top.Ironmc.Iron.protocol.CarpetServerProtocol.onPlayerJoin(player); // Iron - carpet
+         top.Ironmc.Iron.protocol.bladeren.MsptSyncProtocol.onPlayerJoin(player); // Iron - mspt sync
++        top.Ironmc.Iron.protocol.bladeren.IronProtocol.onPlayerJoin(player); // Iron - Iron protocol
  
          final net.kyori.adventure.text.Component jm = playerJoinEvent.joinMessage();
  
-diff --git a/src/main/java/top/leavesmc/leaves/protocol/bladeren/LeavesProtocol.java b/src/main/java/top/leavesmc/leaves/protocol/bladeren/LeavesProtocol.java
+diff --git a/src/main/java/top/Ironmc/Iron/protocol/bladeren/IronProtocol.java b/src/main/java/top/Ironmc/Iron/protocol/bladeren/IronProtocol.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..c03d70efd5b6d0b6640c9cc9dd194746cfd19ace
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/protocol/bladeren/LeavesProtocol.java
++++ b/src/main/java/top/Ironmc/Iron/protocol/bladeren/IronProtocol.java
 @@ -0,0 +1,29 @@
-+package top.leavesmc.leaves.protocol.bladeren;
++package top.Ironmc.Iron.protocol.bladeren;
 +
 +import io.netty.buffer.Unpooled;
 +import net.minecraft.network.FriendlyByteBuf;
@@ -30,10 +30,10 @@ index 0000000000000000000000000000000000000000..c03d70efd5b6d0b6640c9cc9dd194746
 +import net.minecraft.server.level.ServerPlayer;
 +import org.jetbrains.annotations.Contract;
 +import org.jetbrains.annotations.NotNull;
-+import top.leavesmc.leaves.LeavesConfig;
-+import top.leavesmc.leaves.util.ProtocolUtils;
++import top.Ironmc.Iron.IronConfig;
++import top.Ironmc.Iron.util.ProtocolUtils;
 +
-+public class LeavesProtocol {
++public class IronProtocol {
 +
 +    public static final String PROTOCOL_ID = "bladeren";
 +
@@ -47,7 +47,7 @@ index 0000000000000000000000000000000000000000..c03d70efd5b6d0b6640c9cc9dd194746
 +    public static void onPlayerJoin(@NotNull ServerPlayer player) {
 +        // lava riptide
 +        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-+        buf.writeBoolean(LeavesConfig.lavaRiptide);
++        buf.writeBoolean(IronConfig.lavaRiptide);
 +        ProtocolUtils.sendPayloadPacket(player, LAVA_RIPTIDE, buf);
 +    }
 +}

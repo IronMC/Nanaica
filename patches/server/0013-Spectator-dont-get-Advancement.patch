@@ -14,17 +14,17 @@ index 7fc87841fd72fc9b5bca4fbdffd378c7b75920e1..fd9e85dab7c511873824cac56a270ff4
  import net.minecraft.world.level.GameRules;
 +import net.minecraft.world.level.GameType;
  import org.slf4j.Logger;
- import top.leavesmc.leaves.bot.ServerBot;
+ import top.Ironmc.Iron.bot.ServerBot;
  
 @@ -230,6 +231,11 @@ public class PlayerAdvancements {
              return false;
          }
-         // Leaves end - bot can't get advancement
-+        // Leaves start - spectator don't get advancement
-+        if (top.leavesmc.leaves.LeavesConfig.spectatorDontGetAdvancement && player.gameMode.getGameModeForPlayer() == GameType.SPECTATOR) {
+         // Iron end - bot can't get advancement
++        // Iron start - spectator don't get advancement
++        if (top.Ironmc.Iron.IronConfig.spectatorDontGetAdvancement && player.gameMode.getGameModeForPlayer() == GameType.SPECTATOR) {
 +            return false;
 +        }
-+        // Leaves end - spectator don't get advancement
++        // Iron end - spectator don't get advancement
          boolean flag = false;
          AdvancementProgress advancementprogress = this.getOrStartProgress(advancement);
          boolean flag1 = advancementprogress.isDone();

@@ -13,7 +13,7 @@ index e122a633bc3e26f7a98149f66da8a9e8359c6faf..3b03de0fe88c76b21d58472139b648a9
      // Paper end - optimise ChunkMap#anyPlayerCloseEnoughForSpawning
  
 -    void addPlayerToDistanceMaps(ServerPlayer player) {
-+    public void addPlayerToDistanceMaps(ServerPlayer player) { // Leaves - package -> public
++    public void addPlayerToDistanceMaps(ServerPlayer player) { // Iron - package -> public
          this.level.playerChunkLoader.addPlayer(player); // Paper - replace chunk loader
          int chunkX = MCUtil.getChunkCoordinate(player.getX());
          int chunkZ = MCUtil.getChunkCoordinate(player.getZ());
@@ -22,7 +22,7 @@ index e122a633bc3e26f7a98149f66da8a9e8359c6faf..3b03de0fe88c76b21d58472139b648a9
      }
  
 -    void removePlayerFromDistanceMaps(ServerPlayer player) {
-+    public void removePlayerFromDistanceMaps(ServerPlayer player) { // Leaves - package -> public
++    public void removePlayerFromDistanceMaps(ServerPlayer player) { // Iron - package -> public
          this.level.playerChunkLoader.removePlayer(player); // Paper - replace chunk loader
  
          // Paper start - optimise ChunkMap#anyPlayerCloseEnoughForSpawning
@@ -32,7 +32,7 @@ index e122a633bc3e26f7a98149f66da8a9e8359c6faf..3b03de0fe88c76b21d58472139b648a9
      private boolean skipPlayer(ServerPlayer player) {
 -        return player.isSpectator() && !this.level.getGameRules().getBoolean(GameRules.RULE_SPECTATORSGENERATECHUNKS);
 +        return (player.isSpectator() && !this.level.getGameRules().getBoolean(GameRules.RULE_SPECTATORSGENERATECHUNKS))
-+            || (top.leavesmc.leaves.LeavesConfig.elytraAeronauticsNoChunk && player.elytraAeronauticsNoChunk); // Leaves - Elytra aeronautics
++            || (top.Ironmc.Iron.IronConfig.elytraAeronauticsNoChunk && player.elytraAeronauticsNoChunk); // Iron - Elytra aeronautics
      }
  
      void updatePlayerStatus(ServerPlayer player, boolean added) {
@@ -53,7 +53,7 @@ index 6d40c0b3fbccaa86207603f38b073f36df3880e6..d5659ed1f59967060b4e511a571a7f37
  
                  // Paper start - Prevent moving into unloaded chunks
 -                if (this.player.level().paperConfig().chunks.preventMovingIntoUnloadedChunks && (
-+                if (this.player.level().paperConfig().chunks.preventMovingIntoUnloadedChunks && !player.elytraAeronauticsNoChunk && ( // Leaves - no chunk load
++                if (this.player.level().paperConfig().chunks.preventMovingIntoUnloadedChunks && !player.elytraAeronauticsNoChunk && ( // Iron - no chunk load
                      !worldserver.areChunksLoadedForMove(this.player.getBoundingBox().expandTowards(new Vec3(toX, toY, toZ).subtract(this.player.position()))) ||
                          !worldserver.areChunksLoadedForMove(entity.getBoundingBox().expandTowards(new Vec3(toX, toY, toZ).subtract(entity.position())))
                      )) {
@@ -66,13 +66,13 @@ index e9111c5f018815f70f171e606d6a7355be075e39..d8010922d90c8e6aa3951978001b49fe
                  }
              }
 -
-+            // Leaves start - elytra aeronautics
-+            if (top.leavesmc.leaves.LeavesConfig.elytraAeronauticsNoChunk && this instanceof Player player) {
++            // Iron start - elytra aeronautics
++            if (top.Ironmc.Iron.IronConfig.elytraAeronauticsNoChunk && this instanceof Player player) {
 +                if (movementType == MoverType.PLAYER && player.isFallFlying()) {
-+                    top.leavesmc.leaves.util.ElytraAeronauticsHelper.flightBehaviour(player, movement);
++                    top.Ironmc.Iron.util.ElytraAeronauticsHelper.flightBehaviour(player, movement);
 +                }
 +            }
-+            // Leaves end - elytra aeronautics
++            // Iron end - elytra aeronautics
              this.level().getProfiler().push("move");
              if (this.stuckSpeedMultiplier.lengthSqr() > 1.0E-7D) {
                  movement = movement.multiply(this.stuckSpeedMultiplier);
@@ -80,7 +80,7 @@ index e9111c5f018815f70f171e606d6a7355be075e39..d8010922d90c8e6aa3951978001b49fe
          this.yo = y;
          this.zo = d4;
          this.setPos(d3, y, d4);
-+        if (this instanceof Player player && player.elytraAeronauticsNoChunk) return; // Leaves - elytra aeronautics
++        if (this instanceof Player player && player.elytraAeronauticsNoChunk) return; // Iron - elytra aeronautics
          if (this.valid) this.level.getChunk((int) Math.floor(this.getX()) >> 4, (int) Math.floor(this.getZ()) >> 4); // CraftBukkit
      }
  
@@ -92,17 +92,17 @@ index 352ef747063f9cb1a26bf906f8cb52351ec4ae1d..25e00eaf8971da42ee26ce3f0e3ea17c
      public boolean affectsSpawning = true;
      public net.kyori.adventure.util.TriState flyingFallDamage = net.kyori.adventure.util.TriState.NOT_SET;
      // Paper end
-+    public boolean elytraAeronauticsNoChunk = false; // Leaves - Elytra aeronautics
++    public boolean elytraAeronauticsNoChunk = false; // Iron - Elytra aeronautics
  
      // CraftBukkit start
      public boolean fauxSleeping;
-diff --git a/src/main/java/top/leavesmc/leaves/util/ElytraAeronauticsHelper.java b/src/main/java/top/leavesmc/leaves/util/ElytraAeronauticsHelper.java
+diff --git a/src/main/java/top/Ironmc/Iron/util/ElytraAeronauticsHelper.java b/src/main/java/top/Ironmc/Iron/util/ElytraAeronauticsHelper.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..fc25e2f960a2936e656541c0fe13745e62451179
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/util/ElytraAeronauticsHelper.java
++++ b/src/main/java/top/Ironmc/Iron/util/ElytraAeronauticsHelper.java
 @@ -0,0 +1,39 @@
-+package top.leavesmc.leaves.util;
++package top.Ironmc.Iron.util;
 +
 +import net.minecraft.core.SectionPos;
 +import net.minecraft.network.chat.Component;
@@ -110,19 +110,19 @@ index 0000000000000000000000000000000000000000..fc25e2f960a2936e656541c0fe13745e
 +import net.minecraft.server.level.ServerPlayer;
 +import net.minecraft.world.entity.player.Player;
 +import net.minecraft.world.phys.Vec3;
-+import top.leavesmc.leaves.LeavesConfig;
++import top.Ironmc.Iron.IronConfig;
 +
 +public class ElytraAeronauticsHelper {
 +
 +    public static void flightBehaviour(Player player, Vec3 velocity) {
-+        if (LeavesConfig.elytraAeronauticsNoChunk) {
-+            if ((LeavesConfig.elytraAeronauticsNoChunkSpeed <= 0.0D || velocity.horizontalDistanceSqr() >= LeavesConfig.elytraAeronauticsNoChunkSpeed)
-+                && (LeavesConfig.elytraAeronauticsNoChunkHeight <= 0.0D || player.getY() >= LeavesConfig.elytraAeronauticsNoChunkHeight)) {
++        if (IronConfig.elytraAeronauticsNoChunk) {
++            if ((IronConfig.elytraAeronauticsNoChunkSpeed <= 0.0D || velocity.horizontalDistanceSqr() >= IronConfig.elytraAeronauticsNoChunkSpeed)
++                && (IronConfig.elytraAeronauticsNoChunkHeight <= 0.0D || player.getY() >= IronConfig.elytraAeronauticsNoChunkHeight)) {
 +                if (!player.elytraAeronauticsNoChunk) {
 +                    player.elytraAeronauticsNoChunk = true;
 +                    ServerPlayer serverPlayer = (ServerPlayer) player;
-+                    if (LeavesConfig.elytraAeronauticsNoChunkMes) {
-+                        serverPlayer.sendSystemMessage(Component.literal(LeavesConfig.elytraAeronauticsNoChunkStartMes), true);
++                    if (IronConfig.elytraAeronauticsNoChunkMes) {
++                        serverPlayer.sendSystemMessage(Component.literal(IronConfig.elytraAeronauticsNoChunkStartMes), true);
 +                    }
 +                    ((ServerLevel) serverPlayer.level()).chunkSource.chunkMap.removePlayerFromDistanceMaps(serverPlayer);
 +                    ((ServerLevel) serverPlayer.level()).chunkSource.chunkMap.getDistanceManager().removePlayer(serverPlayer.getLastSectionPos(), serverPlayer);
@@ -131,8 +131,8 @@ index 0000000000000000000000000000000000000000..fc25e2f960a2936e656541c0fe13745e
 +                if (player.elytraAeronauticsNoChunk) {
 +                    player.elytraAeronauticsNoChunk = false;
 +                    ServerPlayer serverPlayer = (ServerPlayer) player;
-+                    if (LeavesConfig.elytraAeronauticsNoChunkMes) {
-+                        serverPlayer.sendSystemMessage(Component.literal(LeavesConfig.elytraAeronauticsNoChunkEndMes), true);
++                    if (IronConfig.elytraAeronauticsNoChunkMes) {
++                        serverPlayer.sendSystemMessage(Component.literal(IronConfig.elytraAeronauticsNoChunkEndMes), true);
 +                    }
 +                    ((ServerLevel) serverPlayer.level()).chunkSource.chunkMap.addPlayerToDistanceMaps(serverPlayer);
 +                    ((ServerLevel) serverPlayer.level()).chunkSource.chunkMap.getDistanceManager().addPlayer(SectionPos.of(serverPlayer), serverPlayer);

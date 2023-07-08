@@ -13,10 +13,10 @@ index 420175039254f780bf4415b4118bec8f6d3351e1..afcc518ff50066e846e9b1a79cb99dc2
      public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleHashSet; // Paper
      public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper
      public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
-+    // Leaves start - player operation limiter
++    // Iron start - player operation limiter
 +    private int instaBreakCountPerTick = 0;
 +    private int placeBlockCountPerTick = 0;
-+    // Leaves end - player operation limiter
++    // Iron end - player operation limiter
  
      private final java.util.concurrent.atomic.AtomicReference<io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances> viewDistances = new java.util.concurrent.atomic.AtomicReference<>(new io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances(-1, -1, -1));
      public io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.PlayerChunkLoaderData chunkLoader;
@@ -24,7 +24,7 @@ index 420175039254f780bf4415b4118bec8f6d3351e1..afcc518ff50066e846e9b1a79cb99dc2
              this.joining = false;
          }
          // CraftBukkit end
-+        this.resetOperationCountPerTick(); // Leaves - player operation limiter
++        this.resetOperationCountPerTick(); // Iron - player operation limiter
          this.gameMode.tick();
          this.wardenSpawnTracker.tick();
          --this.spawnInvulnerableTime;
@@ -33,7 +33,7 @@ index 420175039254f780bf4415b4118bec8f6d3351e1..afcc518ff50066e846e9b1a79cb99dc2
          return (CraftPlayer) super.getBukkitEntity();
      }
 +
-+    // Leaves start - player operation limiter
++    // Iron start - player operation limiter
 +    private void resetOperationCountPerTick() {
 +        instaBreakCountPerTick = 0;
 +        placeBlockCountPerTick = 0;
@@ -58,7 +58,7 @@ index 420175039254f780bf4415b4118bec8f6d3351e1..afcc518ff50066e846e9b1a79cb99dc2
 +    public boolean allowOperation() {
 +        return (instaBreakCountPerTick == 0 || placeBlockCountPerTick == 0) && (instaBreakCountPerTick <= 1 && placeBlockCountPerTick <= 2);
 +    }
-+    // Leaves end - player operation limiter
++    // Iron end - player operation limiter
      // CraftBukkit end
  }
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
@@ -69,7 +69,7 @@ index 1635fee928d64f4d2c336dca6675ed4641918830..75596d91e011d27ccf59f5b7f41a8f3c
  import org.bukkit.event.block.Action;
  import org.bukkit.event.player.PlayerGameModeChangeEvent;
  import org.bukkit.event.player.PlayerInteractEvent;
-+import top.leavesmc.leaves.event.player.PlayerOperationLimitEvent;
++import top.Ironmc.Iron.event.player.PlayerOperationLimitEvent;
  // CraftBukkit end
  
  public class ServerPlayerGameMode {
@@ -77,8 +77,8 @@ index 1635fee928d64f4d2c336dca6675ed4641918830..75596d91e011d27ccf59f5b7f41a8f3c
      }
  
      public void destroyAndAck(BlockPos pos, int sequence, String reason) {
-+        // Leaves start - player operation limiter
-+        if (top.leavesmc.leaves.LeavesConfig.playerOperationLimiter) {
++        // Iron start - player operation limiter
++        if (top.Ironmc.Iron.IronConfig.playerOperationLimiter) {
 +            if (reason.equals("insta mine")) {
 +                player.addInstaBreakCountPerTick();
 +                if (!player.allowOperation()) {
@@ -89,7 +89,7 @@ index 1635fee928d64f4d2c336dca6675ed4641918830..75596d91e011d27ccf59f5b7f41a8f3c
 +                }
 +            }
 +        }
-+        // Leaves end - player operation limiter
++        // Iron end - player operation limiter
          if (this.destroyBlock(pos)) {
              this.debugLogging(pos, true, sequence, reason);
          } else {
@@ -106,7 +106,7 @@ index 1015b3c5f6969709bb8ebfbd66eb9cede444385c..437ed8d4cba5e3393ac6370f6b8e364e
 +import org.bukkit.craftbukkit.block.CraftBlockState;
  import org.bukkit.craftbukkit.block.data.CraftBlockData;
  import org.bukkit.event.block.BlockCanBuildEvent;
-+import top.leavesmc.leaves.event.player.PlayerOperationLimitEvent;
++import top.Ironmc.Iron.event.player.PlayerOperationLimitEvent;
  // CraftBukkit end
  
  public class BlockItem extends Item {
@@ -114,8 +114,8 @@ index 1015b3c5f6969709bb8ebfbd66eb9cede444385c..437ed8d4cba5e3393ac6370f6b8e364e
                  final org.bukkit.block.BlockState oldBlockstate = blockstate != null ? blockstate : org.bukkit.craftbukkit.block.CraftBlockStates.getBlockState(blockactioncontext1.getLevel(), blockactioncontext1.getClickedPos()); // Paper
                  // CraftBukkit end
  
-+                // Leaves start - player operation limiter
-+                if (top.leavesmc.leaves.LeavesConfig.playerOperationLimiter && !context.getLevel().isClientSide()) {
++                // Iron start - player operation limiter
++                if (top.Ironmc.Iron.IronConfig.playerOperationLimiter && !context.getLevel().isClientSide()) {
 +                    ServerPlayer player = (ServerPlayer) context.getPlayer();
 +                    if (player != null && iblockdata != null) {
 +                        player.addPlaceBlockCountPerTick();
@@ -127,7 +127,7 @@ index 1015b3c5f6969709bb8ebfbd66eb9cede444385c..437ed8d4cba5e3393ac6370f6b8e364e
 +                        }
 +                    }
 +                }
-+                // Leaves end - player operation limiter
++                // Iron end - player operation limiter
                  if (iblockdata == null) {
                      return InteractionResult.FAIL;
                  } else if (!this.placeBlock(blockactioncontext1, iblockdata)) {

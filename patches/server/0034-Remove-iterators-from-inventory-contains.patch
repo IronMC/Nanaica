@@ -14,8 +14,8 @@ index 395cecc385e4126a7534ac9aeb15cf323efab03e..a8e8ed277bf467ca8a34e040bf7b1257
  
      public boolean contains(ItemStack stack) {
 -        Iterator iterator = this.compartments.iterator();
-+        // Leaves start - don't allocate iterators
-+        if (top.leavesmc.leaves.LeavesConfig.removeInventoryContainsIterators) {
++        // Iron start - don't allocate iterators
++        if (top.Ironmc.Iron.IronConfig.removeInventoryContainsIterators) {
 +            for (int i = 0; i < this.compartments.size(); i++) {
 +                List<ItemStack> list = this.compartments.get(i);
 +                for (int j = 0; j < list.size(); j++) {
@@ -50,7 +50,7 @@ index 395cecc385e4126a7534ac9aeb15cf323efab03e..a8e8ed277bf467ca8a34e040bf7b1257
              }
          }
 -
-+        // Leaves end - don't allocate iterators
++        // Iron end - don't allocate iterators
          return false;
      }
  

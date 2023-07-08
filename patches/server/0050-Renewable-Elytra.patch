@@ -22,19 +22,19 @@ index 4a132c3eff6978e927bcd4df56b9ce0306af6d19..8f390c7201da00f7e1c5913f0d0642a2
          return (double) this.getEyeHeight();
      }
  
-+    // Leaves start - renewable elytra
++    // Iron start - renewable elytra
 +    @Override
 +    protected void dropFromLootTable(DamageSource source, boolean causedByPlayer) {
 +        super.dropFromLootTable(source, causedByPlayer);
-+        if (top.leavesmc.leaves.LeavesConfig.renewableElytra > 0.0D) {
-+            if (source.getEntity() instanceof Shulker && this.random.nextDouble() < top.leavesmc.leaves.LeavesConfig.renewableElytra) {
++        if (top.Ironmc.Iron.IronConfig.renewableElytra > 0.0D) {
++            if (source.getEntity() instanceof Shulker && this.random.nextDouble() < top.Ironmc.Iron.IronConfig.renewableElytra) {
 +                ItemStack item = new ItemStack(Items.ELYTRA);
 +                item.setDamageValue(432);
 +                this.spawnAtLocation(item);
 +            }
 +        }
 +    }
-+    // Leaves end - renewable elytra
++    // Iron end - renewable elytra
 +
      // Paper start
      java.util.UUID spawningEntity;

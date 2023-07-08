@@ -13,7 +13,7 @@ index 9b0049dfeaec9b688bf276f2ac2b18943b5696b2..8a7733f83c2ba0c73069357184d77eee
  
              this.setSuccess(ShearsDispenseItemBehavior.tryShearBeehive(worldserver, blockposition) || ShearsDispenseItemBehavior.tryShearLivingEntity(worldserver, blockposition, bukkitBlock, craftItem)); // CraftBukkit
 -            if (this.isSuccess() && stack.hurt(1, worldserver.getRandom(), (ServerPlayer) null)) {
-+            if (this.isSuccess() && stack.hurt(1, worldserver.getRandom(), (ServerPlayer) null) && !top.leavesmc.leaves.LeavesConfig.shearsInDispenserCanZeroAmount) { // Leaves - Make shears in dispenser can unlimited use
++            if (this.isSuccess() && stack.hurt(1, worldserver.getRandom(), (ServerPlayer) null) && !top.Ironmc.Iron.IronConfig.shearsInDispenserCanZeroAmount) { // Iron - Make shears in dispenser can unlimited use
                  stack.setCount(0);
              }
          }

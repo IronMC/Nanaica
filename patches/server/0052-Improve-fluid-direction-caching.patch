@@ -14,11 +14,11 @@ index 5502ad143fd2575f1346334b5b4fe7846628f54e..39669ad8e8895f1ff3e3a7e3ee1ab39c
          object2bytelinkedopenhashmap.defaultReturnValue((byte) 127);
          return object2bytelinkedopenhashmap;
      });
-+    // Leaves start - use our own cache
-+    private static final ThreadLocal<top.leavesmc.leaves.structs.FluidDirectionCache<Block.BlockStatePairKey>> localFluidDirectionCache = ThreadLocal.withInitial(() -> {
-+        return new top.leavesmc.leaves.structs.FluidDirectionCache<>(2048);
++    // Iron start - use our own cache
++    private static final ThreadLocal<top.Ironmc.Iron.structs.FluidDirectionCache<Block.BlockStatePairKey>> localFluidDirectionCache = ThreadLocal.withInitial(() -> {
++        return new top.Ironmc.Iron.structs.FluidDirectionCache<>(2048);
 +    });
-+    // Leaves end - use our own cache
++    // Iron end - use our own cache
      private final Map<FluidState, VoxelShape> shapes = Maps.newIdentityHashMap();
  
      public FlowingFluid() {}
@@ -27,8 +27,8 @@ index 5502ad143fd2575f1346334b5b4fe7846628f54e..39669ad8e8895f1ff3e3a7e3ee1ab39c
  
      private boolean canPassThroughWall(Direction face, BlockGetter world, BlockPos pos, BlockState state, BlockPos fromPos, BlockState fromState) {
 -        Object2ByteLinkedOpenHashMap object2bytelinkedopenhashmap;
-+        // Leaves start - cache
-+        if (!top.leavesmc.leaves.LeavesConfig.improveFluidDirectionCaching) {
++        // Iron start - cache
++        if (!top.Ironmc.Iron.IronConfig.improveFluidDirectionCaching) {
 +            Object2ByteLinkedOpenHashMap object2bytelinkedopenhashmap;
 +
 +            if (!state.getBlock().hasDynamicShape() && !fromState.getBlock().hasDynamicShape()) {
@@ -77,7 +77,7 @@ index 5502ad143fd2575f1346334b5b4fe7846628f54e..39669ad8e8895f1ff3e3a7e3ee1ab39c
          } else {
 -            block_a = null;
 -        }
-+            top.leavesmc.leaves.structs.FluidDirectionCache<Block.BlockStatePairKey> cache = null;
++            top.Ironmc.Iron.structs.FluidDirectionCache<Block.BlockStatePairKey> cache = null;
 +            if (!state.getBlock().hasDynamicShape() && !fromState.getBlock().hasDynamicShape()) {
 +                cache = localFluidDirectionCache.get();
 +            }
@@ -112,17 +112,17 @@ index 5502ad143fd2575f1346334b5b4fe7846628f54e..39669ad8e8895f1ff3e3a7e3ee1ab39c
          }
 -
 -        return flag;
-+        // Leaves start - cache
++        // Iron start - cache
      }
  
      public abstract Fluid getFlowing();
-diff --git a/src/main/java/top/leavesmc/leaves/structs/FluidDirectionCache.java b/src/main/java/top/leavesmc/leaves/structs/FluidDirectionCache.java
+diff --git a/src/main/java/top/Ironmc/Iron/structs/FluidDirectionCache.java b/src/main/java/top/Ironmc/Iron/structs/FluidDirectionCache.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..30dc532e75bc4dd7ddb086ffb24118cf4b7b5d2f
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/structs/FluidDirectionCache.java
++++ b/src/main/java/top/Ironmc/Iron/structs/FluidDirectionCache.java
 @@ -0,0 +1,138 @@
-+package top.leavesmc.leaves.structs;
++package top.Ironmc.Iron.structs;
 +
 +import it.unimi.dsi.fastutil.HashCommon;
 +

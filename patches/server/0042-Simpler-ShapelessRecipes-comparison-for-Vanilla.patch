@@ -13,21 +13,21 @@ index 7f174bb89bf4d700a5ae1b65d8abd4f5b1e7b5ed..fef23722a5abb56c5f0a24a785a312c0
      final CraftingBookCategory category;
      final ItemStack result;
      final NonNullList<Ingredient> ingredients;
-+    private final boolean isBukkit; // Leaves
++    private final boolean isBukkit; // Iron
  
      public ShapelessRecipe(ResourceLocation id, String group, CraftingBookCategory category, ItemStack output, NonNullList<Ingredient> input) {
-+        // Leaves start
++        // Iron start
 +        this(id, group, category, output, input, false);
 +    }
 +
 +    public ShapelessRecipe(ResourceLocation id, String group, CraftingBookCategory category, ItemStack output, NonNullList<Ingredient> input, boolean isBukkit) {
-+        // Leaves end
++        // Iron end
          this.id = id;
          this.group = group;
          this.category = category;
          this.result = output;
          this.ingredients = input;
-+        this.isBukkit = isBukkit; // Leaves
++        this.isBukkit = isBukkit; // Iron
      }
  
      // CraftBukkit start
@@ -35,8 +35,8 @@ index 7f174bb89bf4d700a5ae1b65d8abd4f5b1e7b5ed..fef23722a5abb56c5f0a24a785a312c0
      }
  
      public boolean matches(CraftingContainer inventory, Level world) {
-+        // Leaves start - easy match
-+        if (top.leavesmc.leaves.LeavesConfig.simplerVanillaShapelessRecipes && !this.isBukkit) {
++        // Iron start - easy match
++        if (top.Ironmc.Iron.IronConfig.simplerVanillaShapelessRecipes && !this.isBukkit) {
 +            java.util.List<Ingredient> ingredients = com.google.common.collect.Lists.newArrayList(this.ingredients.toArray(new Ingredient[0]));
 +
 +            inventory: for (int index = 0; index < inventory.getContainerSize(); index++) {
@@ -55,7 +55,7 @@ index 7f174bb89bf4d700a5ae1b65d8abd4f5b1e7b5ed..fef23722a5abb56c5f0a24a785a312c0
 +
 +            return ingredients.isEmpty();
 +        }
-+        // Leaves end - easy match
++        // Iron end - easy match
 +
          StackedContents autorecipestackmanager = new StackedContents();
          int i = 0;
@@ -69,6 +69,6 @@ index f7ea77dd82d978ad307f99c743efacfb34478b3d..96be7a7b030b2f82ac91f0c5c8e66f28
          }
  
 -        MinecraftServer.getServer().getRecipeManager().addRecipe(new net.minecraft.world.item.crafting.ShapelessRecipe(CraftNamespacedKey.toMinecraft(this.getKey()), this.getGroup(), CraftRecipe.getCategory(this.getCategory()), CraftItemStack.asNMSCopy(this.getResult()), data));
-+        MinecraftServer.getServer().getRecipeManager().addRecipe(new net.minecraft.world.item.crafting.ShapelessRecipe(CraftNamespacedKey.toMinecraft(this.getKey()), this.getGroup(), CraftRecipe.getCategory(this.getCategory()), CraftItemStack.asNMSCopy(this.getResult()), data, true)); // Leaves - is bukkit recipe
++        MinecraftServer.getServer().getRecipeManager().addRecipe(new net.minecraft.world.item.crafting.ShapelessRecipe(CraftNamespacedKey.toMinecraft(this.getKey()), this.getGroup(), CraftRecipe.getCategory(this.getCategory()), CraftItemStack.asNMSCopy(this.getResult()), data, true)); // Iron - is bukkit recipe
      }
  }

@@ -14,7 +14,7 @@ index 05e7c0986f1959ec16a6f81cf905744ac3df2f6a..b6ad64f0bed9459aa2ecb4f80b716536
      // Paper start - optimise random block ticking
      private final BlockPos.MutableBlockPos chunkTickMutablePosition = new BlockPos.MutableBlockPos();
 -    private final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(this.random.nextLong());
-+    // private final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(this.random.nextLong()); // Leaves - moved to super
++    // private final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(this.random.nextLong()); // Iron - moved to super
      // Paper end
  
      public void tickChunk(LevelChunk chunk, int randomTickSpeed) {
@@ -26,7 +26,7 @@ index a0693f18c04eb11cf010700499b0302475bb7cd1..11d362ce8043966a7fce6c64849b7c08
  
      public abstract ResourceKey<LevelStem> getTypeKey();
  
-+    protected final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(java.util.concurrent.ThreadLocalRandom.current().nextLong()); // Leaves - move thread unsafe random initialization
++    protected final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(java.util.concurrent.ThreadLocalRandom.current().nextLong()); // Iron - move thread unsafe random initialization
 +
      protected Level(WritableLevelData worlddatamutable, ResourceKey<Level> resourcekey, RegistryAccess iregistrycustom, Holder<DimensionType> holder, Supplier<ProfilerFiller> supplier, boolean flag, boolean flag1, long i, int j, org.bukkit.generator.ChunkGenerator gen, org.bukkit.generator.BiomeProvider biomeProvider, org.bukkit.World.Environment env, java.util.function.Function<org.spigotmc.SpigotWorldConfig, io.papermc.paper.configuration.WorldConfiguration> paperWorldConfigCreator, java.util.concurrent.Executor executor) { // Paper - Async-Anti-Xray - Pass executor
          this.spigotConfig = new org.spigotmc.SpigotWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName()); // Spigot
@@ -35,11 +35,11 @@ index a0693f18c04eb11cf010700499b0302475bb7cd1..11d362ce8043966a7fce6c64849b7c08
          this.chunkPacketBlockController = this.paperConfig().anticheat.antiXray.enabled ? new com.destroystokyo.paper.antixray.ChunkPacketBlockControllerAntiXray(this, executor) : com.destroystokyo.paper.antixray.ChunkPacketBlockController.NO_OPERATION_INSTANCE; // Paper - Anti-Xray
      }
  
-+    // Leaves start - thread unsafe random get
++    // Iron start - thread unsafe random get
 +    public net.minecraft.util.RandomSource getThreadUnsafeRandom() {
 +        return randomTickRandom;
 +    }
-+    // Leaves end - thread unsafe random get
++    // Iron end - thread unsafe random get
 +
      // Paper start
      // ret true if no collision

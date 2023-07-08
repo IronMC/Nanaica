@@ -15,9 +15,9 @@ index 39eb9301626b191958ce42daa34b1ff3241cea80..7e19c96e92f821836702969aef4628f2
  
 -        while (blockposition_mutableblockposition.getY() > this.level().getMinBuildHeight() && !this.level().getBlockState(blockposition_mutableblockposition).blocksMotion()) {
 -            blockposition_mutableblockposition.move(Direction.DOWN);
-+        // Leaves start - single chunk lookup
++        // Iron start - single chunk lookup
 +        BlockState iblockdata;
-+        if (top.leavesmc.leaves.LeavesConfig.reduceChuckLoadAndLookup) {
++        if (top.Ironmc.Iron.IronConfig.reduceChuckLoadAndLookup) {
 +            net.minecraft.world.level.chunk.LevelChunk chunk = this.level().getChunkIfLoaded(blockposition_mutableblockposition);
 +            if (chunk == null) {
 +                return false;
@@ -35,7 +35,7 @@ index 39eb9301626b191958ce42daa34b1ff3241cea80..7e19c96e92f821836702969aef4628f2
 +
 +            iblockdata = this.level().getBlockState(blockposition_mutableblockposition);
          }
-+        // Leaves end - single chunk lookup
++        // Iron end - single chunk lookup
  
 -        BlockState iblockdata = this.level().getBlockState(blockposition_mutableblockposition);
          boolean flag = iblockdata.blocksMotion();

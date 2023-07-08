@@ -42,7 +42,7 @@ index 33f657e1a5d7676db00c37f6c8a12abdb9b2374f..b93be8c7da98c4b56d1a6fd74c32509c
 -        this.teleportTo(worldserver, null);
 -    }
 -    // Paper end - make end portalling safe
-+	// Leaves - fix gravity block duper
++	// Iron - fix gravity block duper
  
      public Entity(EntityType<?> type, Level world) {
          this.id = Entity.ENTITY_COUNTER.incrementAndGet();
@@ -51,7 +51,7 @@ index 33f657e1a5d7676db00c37f6c8a12abdb9b2374f..b93be8c7da98c4b56d1a6fd74c32509c
  
              this.processPortalCooldown();
 -            this.tickEndPortal(); // Paper - make end portalling safe
-+			// Leaves - fix gravity block duper
++			// Iron - fix gravity block duper
          }
      }
  
@@ -68,7 +68,7 @@ index 18eaccb39a4c81338a8cbebe3de03934913ac2a4..34c62ba8d659c3df37243c3abf4cdd70
 -            return;
 -        }
 -        // Paper end - fix sand duping
-+		// Leaves - fix gravity block duper
++		// Iron - fix gravity block duper
          if (this.blockState.isAir()) {
              this.discard();
          } else {
@@ -81,7 +81,7 @@ index 18eaccb39a4c81338a8cbebe3de03934913ac2a4..34c62ba8d659c3df37243c3abf4cdd70
 -                return;
 -            }
 -            // Paper end - fix sand duping
-+			// Leaves - fix gravity block duper
++			// Iron - fix gravity block duper
  
              // Paper start - Configurable EntityFallingBlock height nerf
              if (this.level().paperConfig().fixes.fallingBlockHeightNerf.test(v -> this.getY() > v)) {
@@ -98,7 +98,7 @@ index 41d7cff39fc37955877668337689b4b26cd8c7cf..5e0e8afa553a8dcd87dfc10a595ba10c
 -            entity.portalBlock = pos.immutable();
 -            // Paper end - move all of this logic into portal tick
 -        }
-+            // Leaves start - fix gravity block duper
++            // Iron start - fix gravity block duper
 +            // CraftBukkit start - Entity in portal
 +            EntityPortalEnterEvent event = new EntityPortalEnterEvent(entity.getBukkitEntity(), new org.bukkit.Location(world.getWorld(), pos.getX(), pos.getY(), pos.getZ()));
 +            world.getCraftServer().getPluginManager().callEvent(event);
@@ -109,7 +109,7 @@ index 41d7cff39fc37955877668337689b4b26cd8c7cf..5e0e8afa553a8dcd87dfc10a595ba10c
 +            }
 +            // CraftBukkit end
 +            entity.changeDimension(worldserver);
-+            // Leaves end - fix gravity block duper
++            // Iron end - fix gravity block duper
 +        }
      }
  

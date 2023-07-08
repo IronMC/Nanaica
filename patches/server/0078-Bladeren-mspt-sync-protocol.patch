@@ -9,10 +9,10 @@ index b8fd91fc1ebaafad28cfa08d5af71aa3b1c54da4..f393f9ae4465b8970122b2707290cac4
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1610,6 +1610,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
-         top.leavesmc.leaves.protocol.BBORProtocol.tick(); // Leaves - bbor
-         top.leavesmc.leaves.protocol.AppleSkinProtocol.tick(); // Leaves - appleskin
-         top.leavesmc.leaves.util.BreakBedrockList.endTick(); // Leaves - break bedrock list
-+        top.leavesmc.leaves.protocol.bladeren.MsptSyncProtocol.tick(this); // Leaves - mspt sync
+         top.Ironmc.Iron.protocol.BBORProtocol.tick(); // Iron - bbor
+         top.Ironmc.Iron.protocol.AppleSkinProtocol.tick(); // Iron - appleskin
+         top.Ironmc.Iron.util.BreakBedrockList.endTick(); // Iron - break bedrock list
++        top.Ironmc.Iron.protocol.bladeren.MsptSyncProtocol.tick(this); // Iron - mspt sync
  
          MinecraftTimings.tickablesTimer.startTiming(); // Spigot // Paper
          for (int i = 0; i < this.tickables.size(); ++i) {
@@ -21,11 +21,11 @@ index c1250c4cb331f3ac8fed0f9ffda8b4eab529f668..e738d0178d7c19c09e77ac4452a02d34
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -3579,6 +3579,9 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
-                 if (top.leavesmc.leaves.LeavesConfig.leavesCarpetSupport && ProtocolUtils.isNamespacePacket(packet, top.leavesmc.leaves.protocol.CarpetServerProtocol.PROTOCOL_ID)) {
-                     top.leavesmc.leaves.protocol.CarpetServerProtocol.handlePacket(player, packet);
+                 if (top.Ironmc.Iron.IronConfig.IronCarpetSupport && ProtocolUtils.isNamespacePacket(packet, top.Ironmc.Iron.protocol.CarpetServerProtocol.PROTOCOL_ID)) {
+                     top.Ironmc.Iron.protocol.CarpetServerProtocol.handlePacket(player, packet);
                  }
-+                if (top.leavesmc.leaves.LeavesConfig.msptSyncProtocol && ProtocolUtils.isNamespacePacket(packet, top.leavesmc.leaves.protocol.bladeren.MsptSyncProtocol.PROTOCOL_ID)) {
-+                    top.leavesmc.leaves.protocol.bladeren.MsptSyncProtocol.handlePacket(player, packet);
++                if (top.Ironmc.Iron.IronConfig.msptSyncProtocol && ProtocolUtils.isNamespacePacket(packet, top.Ironmc.Iron.protocol.bladeren.MsptSyncProtocol.PROTOCOL_ID)) {
++                    top.Ironmc.Iron.protocol.bladeren.MsptSyncProtocol.handlePacket(player, packet);
 +                }
              } catch (Exception ex) {
                  ServerGamePacketListenerImpl.LOGGER.error("Couldn\'t dispatch custom payload", ex);
@@ -35,28 +35,28 @@ index fb6810289ac855e622d3970101f27b2133bd67d2..5b03b63653c6b5586fb8d6ac7766bead
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -365,6 +365,7 @@ public abstract class PlayerList {
-         top.leavesmc.leaves.protocol.JadeProtocol.onPlayerJoin(player); // Leaves - Jade
-         top.leavesmc.leaves.protocol.AppleSkinProtocol.onPlayerLoggedIn(player); // Leaves - appleskin
-         top.leavesmc.leaves.protocol.CarpetServerProtocol.onPlayerJoin(player); // Leaves - carpet
-+        top.leavesmc.leaves.protocol.bladeren.MsptSyncProtocol.onPlayerJoin(player); // Leaves - mspt sync
+         top.Ironmc.Iron.protocol.JadeProtocol.onPlayerJoin(player); // Iron - Jade
+         top.Ironmc.Iron.protocol.AppleSkinProtocol.onPlayerLoggedIn(player); // Iron - appleskin
+         top.Ironmc.Iron.protocol.CarpetServerProtocol.onPlayerJoin(player); // Iron - carpet
++        top.Ironmc.Iron.protocol.bladeren.MsptSyncProtocol.onPlayerJoin(player); // Iron - mspt sync
  
          final net.kyori.adventure.text.Component jm = playerJoinEvent.joinMessage();
  
 @@ -610,6 +611,7 @@ public abstract class PlayerList {
      public net.kyori.adventure.text.Component remove(ServerPlayer entityplayer, net.kyori.adventure.text.Component leaveMessage) {
-         top.leavesmc.leaves.protocol.BBORProtocol.onPlayerLoggedOut(entityplayer); // Leaves - bbor
-         top.leavesmc.leaves.protocol.AppleSkinProtocol.onPlayerLoggedOut(entityplayer); // Leaves - appleskin
-+        top.leavesmc.leaves.protocol.bladeren.MsptSyncProtocol.onPlayerLoggedOut(entityplayer); // Leaves - mspt sync
+         top.Ironmc.Iron.protocol.BBORProtocol.onPlayerLoggedOut(entityplayer); // Iron - bbor
+         top.Ironmc.Iron.protocol.AppleSkinProtocol.onPlayerLoggedOut(entityplayer); // Iron - appleskin
++        top.Ironmc.Iron.protocol.bladeren.MsptSyncProtocol.onPlayerLoggedOut(entityplayer); // Iron - mspt sync
          // Paper end
          ServerLevel worldserver = entityplayer.serverLevel();
  
-diff --git a/src/main/java/top/leavesmc/leaves/protocol/bladeren/MsptSyncProtocol.java b/src/main/java/top/leavesmc/leaves/protocol/bladeren/MsptSyncProtocol.java
+diff --git a/src/main/java/top/Ironmc/Iron/protocol/bladeren/MsptSyncProtocol.java b/src/main/java/top/Ironmc/Iron/protocol/bladeren/MsptSyncProtocol.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..0f9062d409267f7ea9df9bac4e4323b497448545
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/protocol/bladeren/MsptSyncProtocol.java
++++ b/src/main/java/top/Ironmc/Iron/protocol/bladeren/MsptSyncProtocol.java
 @@ -0,0 +1,63 @@
-+package top.leavesmc.leaves.protocol.bladeren;
++package top.Ironmc.Iron.protocol.bladeren;
 +
 +import io.netty.buffer.Unpooled;
 +import net.minecraft.network.FriendlyByteBuf;
@@ -66,8 +66,8 @@ index 0000000000000000000000000000000000000000..0f9062d409267f7ea9df9bac4e4323b4
 +import net.minecraft.server.level.ServerPlayer;
 +import org.jetbrains.annotations.Contract;
 +import org.jetbrains.annotations.NotNull;
-+import top.leavesmc.leaves.LeavesConfig;
-+import top.leavesmc.leaves.util.ProtocolUtils;
++import top.Ironmc.Iron.IronConfig;
++import top.Ironmc.Iron.util.ProtocolUtils;
 +
 +import java.util.ArrayList;
 +import java.util.Arrays;
@@ -88,7 +88,7 @@ index 0000000000000000000000000000000000000000..0f9062d409267f7ea9df9bac4e4323b4
 +    }
 +
 +    public static void onPlayerJoin(@NotNull ServerPlayer player) {
-+        if (LeavesConfig.msptSyncProtocol) {
++        if (IronConfig.msptSyncProtocol) {
 +            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 +            ProtocolUtils.sendPayloadPacket(player, MSPT_SYNC_ENABLE, buf);
 +        }
@@ -101,14 +101,14 @@ index 0000000000000000000000000000000000000000..0f9062d409267f7ea9df9bac4e4323b4
 +    }
 +
 +    public static void onPlayerLoggedOut(@NotNull ServerPlayer player) {
-+        if (LeavesConfig.msptSyncProtocol) {
++        if (IronConfig.msptSyncProtocol) {
 +            players.remove(player);
 +        }
 +    }
 +
 +    public static void tick(MinecraftServer server) {
-+        if (LeavesConfig.msptSyncProtocol) {
-+            if (server.getTickCount() % LeavesConfig.msptSyncTickInterval == 0 && !players.isEmpty()) {
++        if (IronConfig.msptSyncProtocol) {
++            if (server.getTickCount() % IronConfig.msptSyncTickInterval == 0 && !players.isEmpty()) {
 +                FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 +                double mspt = Arrays.stream(server.tickTimes).average().getAsDouble() * 1.0E-6D;
 +                double tps = 1000.0D / Math.max(mspt, 50);

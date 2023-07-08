@@ -5,6 +5,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = "Leaves"
+rootProject.name = "iron"
 
-include("leaves-api", "leaves-server")
+include("iron-api", "ironr")

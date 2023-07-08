@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: violetc <58360096+s-yh-china@users.noreply.github.com>
 Date: Fri, 29 Oct 2021 16:52:57 +0800
-Subject: [PATCH] Leaves Server Config And Command
+Subject: [PATCH] Iron Server Config And Command
 
 
 diff --git a/src/main/java/co/aikar/timings/TimingsExport.java b/src/main/java/co/aikar/timings/TimingsExport.java
@@ -13,8 +13,8 @@ index a2f71a6d1a9e98133dff6cd0f625da9435a8af14..45897b81a822b9523c16658ca46a5077
              pair("spigot", mapAsJSON(Bukkit.spigot().getSpigotConfig(), null)),
              pair("bukkit", mapAsJSON(Bukkit.spigot().getBukkitConfig(), null)),
 -            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null))
-+            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)), // Leaves - add config to timings report
-+			pair("leaves", mapAsJSON(Bukkit.spigot().getLeavesConfig(), null)) // Leaves - add config to timings report
++            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)), // Iron - add config to timings report
++			pair("Iron", mapAsJSON(Bukkit.spigot().getIronConfig(), null)) // Iron - add config to timings report
          ));
  
          new TimingsExport(listeners, parent, history).start();
@@ -26,7 +26,7 @@ index 670f25370554c3f8c40d2fcc4f5a31d7a372f452..18b10f1d1d62e1184a562ef52e1625b4
              LOGGER.info("Done ({})! For help, type \"help\"", doneTime);
              // Paper end
  
-+			top.leavesmc.leaves.LeavesConfig.createWorldSections = false; // Leaves - dont let plugin create worlds fill our config
++			top.Ironmc.Iron.IronConfig.createWorldSections = false; // Iron - dont let plugin create worlds fill our config
              org.spigotmc.WatchdogThread.tick(); // Paper
              org.spigotmc.WatchdogThread.hasStarted = true; // Paper
              Arrays.fill( recentTps, 20 );
@@ -39,8 +39,8 @@ index 9f422cbeaa52b3e6a0a27af4f8ad4ddb7808483f..3e3e11d4207172d6c24895cef6c7b5a0
          io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
          // Paper end
 +		
-+		top.leavesmc.leaves.LeavesConfig.init((java.io.File) options.valueOf("leaves-settings")); // Leaves - Server Config
-+        top.leavesmc.leaves.LeavesConfig.registerCommands(); // Leaves - Server Command
++		top.Ironmc.Iron.IronConfig.init((java.io.File) options.valueOf("Iron-settings")); // Iron - Server Config
++        top.Ironmc.Iron.IronConfig.registerCommands(); // Iron - Server Command
  
          this.setPvpAllowed(dedicatedserverproperties.pvp);
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
@@ -52,7 +52,7 @@ index 147d802d9207e358fdb2d1c7806fc2f634dcfd98..4f0a2c9b352f5824ec0c30d0f0af0fe1
      // Paper end
  
      public final com.destroystokyo.paper.antixray.ChunkPacketBlockController chunkPacketBlockController; // Paper - Anti-Xray
-+	public final top.leavesmc.leaves.LeavesConfig.WorldConfig leavesConfig; // Leaves - World Config
++	public final top.Ironmc.Iron.IronConfig.WorldConfig IronConfig; // Iron - World Config
      public final co.aikar.timings.WorldTimingsHandler timings; // Paper
      public static BlockPos lastPhysicsProblem; // Spigot
      private org.spigotmc.TickLimiter entityLimiter;
@@ -60,7 +60,7 @@ index 147d802d9207e358fdb2d1c7806fc2f634dcfd98..4f0a2c9b352f5824ec0c30d0f0af0fe1
      protected Level(WritableLevelData worlddatamutable, ResourceKey<Level> resourcekey, RegistryAccess iregistrycustom, Holder<DimensionType> holder, Supplier<ProfilerFiller> supplier, boolean flag, boolean flag1, long i, int j, org.bukkit.generator.ChunkGenerator gen, org.bukkit.generator.BiomeProvider biomeProvider, org.bukkit.World.Environment env, java.util.function.Function<org.spigotmc.SpigotWorldConfig, io.papermc.paper.configuration.WorldConfiguration> paperWorldConfigCreator, java.util.concurrent.Executor executor) { // Paper - Async-Anti-Xray - Pass executor
          this.spigotConfig = new org.spigotmc.SpigotWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName()); // Spigot
          this.paperConfig = paperWorldConfigCreator.apply(this.spigotConfig); // Paper
-+		this.leavesConfig = new top.leavesmc.leaves.LeavesConfig.WorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData)worlddatamutable).getLevelName()); // Leaves - World Config
++		this.IronConfig = new top.Ironmc.Iron.IronConfig.WorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData)worlddatamutable).getLevelName()); // Iron - World Config
          this.generator = gen;
          this.world = new CraftWorld((ServerLevel) this, gen, biomeProvider, env);
  
@@ -72,7 +72,7 @@ index 22402d237f036be3dcbaea3a63718e615766981c..a394fcb1afe37efda30893e06352941f
  
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
          this.console.paperConfigurations.reloadConfigs(this.console);
-+		top.leavesmc.leaves.LeavesConfig.init((File) console.options.valueOf("leaves-settings")); // Leaves - Server Config
++		top.Ironmc.Iron.IronConfig.init((File) console.options.valueOf("Iron-settings")); // Iron - Server Config
          for (ServerLevel world : this.console.getAllLevels()) {
              // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
              world.setSpawnSettings(world.serverLevelData.getDifficulty() != Difficulty.PEACEFUL && config.spawnMonsters, config.spawnAnimals); // Paper - per level difficulty (from MinecraftServer#setDifficulty(ServerLevel, Difficulty, boolean))
@@ -80,7 +80,7 @@ index 22402d237f036be3dcbaea3a63718e615766981c..a394fcb1afe37efda30893e06352941f
                  }
              }
              world.spigotConfig.init(); // Spigot
-+			world.leavesConfig.init(); // Leaves - World Config
++			world.IronConfig.init(); // Iron - World Config
          }
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
@@ -88,7 +88,7 @@ index 22402d237f036be3dcbaea3a63718e615766981c..a394fcb1afe37efda30893e06352941f
          this.reloadData();
          org.spigotmc.SpigotConfig.registerCommands(); // Spigot
          io.papermc.paper.command.PaperCommands.registerCommands(this.console); // Paper
-+        top.leavesmc.leaves.LeavesConfig.registerCommands(); // Leaves - Server Command
++        top.Ironmc.Iron.IronConfig.registerCommands(); // Iron - Server Command
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
@@ -97,13 +97,13 @@ index 22402d237f036be3dcbaea3a63718e615766981c..a394fcb1afe37efda30893e06352941f
              return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
          }
 +		
-+		// Leaves start - add config to timings report
++		// Iron start - add config to timings report
 +		@Override
-+		public YamlConfiguration getLeavesConfig()
++		public YamlConfiguration getIronConfig()
 +		{
-+			return top.leavesmc.leaves.LeavesConfig.config;
++			return top.Ironmc.Iron.IronConfig.config;
 +		}
-+		/// Leaves end - add config to timings report
++		/// Iron end - add config to timings report
  
          @Override
          public void restart() {
@@ -116,23 +116,23 @@ index 35d2da9d91dcdd89de7c0f4af028fd182376ea8d..d73482fb1e71fe2951e96ae0593de268
                          .defaultsTo(new File("paper.yml"))
                          .describedAs("Yml file");
 +						
-+				// Leaves start - Server Config
-+				acceptsAll(asList("leaves", "leaves-settings"), "File for leaves settings")
++				// Iron start - Server Config
++				acceptsAll(asList("Iron", "Iron-settings"), "File for Ironettings")
 +                        .withRequiredArg()
 +                        .ofType(File.class)
-+                        .defaultsTo(new File("leaves.yml"))
++                        .defaultsTo(new File("Ironml"))
 +                        .describedAs("Yml file");
-+				// Leaves end - Server Config
++				// Iron end - Server Config
  
                  acceptsAll(asList("add-plugin", "add-extra-plugin-jar"), "Specify paths to extra plugin jars to be loaded in addition to those in the plugins folder. This argument can be specified multiple times, once for each extra plugin jar path.")
                          .withRequiredArg()
-diff --git a/src/main/java/top/leavesmc/leaves/LeavesConfig.java b/src/main/java/top/leavesmc/leaves/LeavesConfig.java
+diff --git a/src/main/java/top/Ironmc/Iron/Ironnfig.java b/src/main/java/top/Ironmc/IroneavesConfig.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fad38dc71e
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/LeavesConfig.java
++++ b/src/main/java/top/Ironmc/IroneavesConfig.java
 @@ -0,0 +1,814 @@
-+package top.leavesmc.leaves;
++package top.Iron.Iron
 +
 +import com.destroystokyo.paper.util.SneakyThrow;
 +import com.google.common.base.Throwables;
@@ -154,9 +154,9 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +
 +// Powered by Tuinity(https://github.com/Tuinity/Tuinity)
 +
-+public final class LeavesConfig {
++public final class IronConfig {
 +
-+    public static final String CONFIG_HEADER = "Configuration file for Leaves.";
++    public static final String CONFIG_HEADER = "Configuration file for Iron;
 +    public static final int CURRENT_CONFIG_VERSION = 3;
 +
 +    private static final Object[] EMPTY = new Object[0];
@@ -168,7 +168,7 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +    static Map<String, Command> commands;
 +
 +    public static void init(final File file) {
-+        LeavesConfig.configFile = file;
++        IronConfig.configFile = file;
 +        config = new YamlConfiguration();
 +        config.options().header(CONFIG_HEADER);
 +        config.options().copyDefaults(true);
@@ -177,34 +177,34 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +            try {
 +                file.createNewFile();
 +            } catch (final Exception ex) {
-+                Bukkit.getLogger().log(Level.SEVERE, "Failure to create leaves config", ex);
++                Bukkit.getLogger().log(Level.SEVERE, "Failure to create Ironfig", ex);
 +            }
 +        } else {
 +            try {
 +                config.load(file);
 +            } catch (final Exception ex) {
-+                Bukkit.getLogger().log(Level.SEVERE, "Failure to load leaves config", ex);
++                Bukkit.getLogger().log(Level.SEVERE, "Failure to load Irononfig", ex);
 +                SneakyThrow.sneaky(ex); /* Rethrow, this is critical */
 +                throw new RuntimeException(ex); // unreachable
 +            }
 +        }
 +
 +        if (config.contains("config-version-please-do-not-modify-me")) {
-+            LeavesConfig.set("config-version-please-do-not-modify-me", null);
++            IronConfig.set("config-version-please-do-not-modify-me", null);
 +        }
-+        LeavesConfig.configVersion = LeavesConfig.getInt("config-version", CURRENT_CONFIG_VERSION);
-+        LeavesConfig.set("config-version", CURRENT_CONFIG_VERSION);
++        Ironnfig.configVersion = Ironnfig.getInt("config-version", CURRENT_CONFIG_VERSION);
++        Ironnfig.set("config-version", CURRENT_CONFIG_VERSION);
 +
 +        updateConfigVersion(config);
 +
-+        LeavesConfig.load(config);
++        IronConfig.load(config);
 +        registerCarpetRules();
 +
 +	    commands = new HashMap<>();
 +    }
 +
 +    public static void load(final YamlConfiguration config) {
-+        for (Method method : LeavesConfig.class.getDeclaredMethods()) {
++        for (Method method : IronConfig.class.getDeclaredMethods()) {
 +            if (Modifier.isPrivate(method.getModifiers())) {
 +                if (method.getParameterTypes().length == 0 && method.getReturnType() == Void.TYPE) {
 +                    try {
@@ -221,9 +221,9 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +
 +        /* We re-save to add new options */
 +        try {
-+            config.save(LeavesConfig.configFile);
++            config.save(Ironnfig.configFile);
 +        } catch (final Exception ex) {
-+            Bukkit.getLogger().log(Level.SEVERE, "Unable to save leaves config", ex);
++            Bukkit.getLogger().log(Level.SEVERE, "Unable to save Irononfig", ex);
 +        }
 +    }
 +
@@ -261,43 +261,43 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +    }
 +
 +    static void set(final String path, final Object value) {
-+        LeavesConfig.config.set(path, value);
++        Irononfig.set(path, value);
 +    }
 +
 +    public static void registerCommands() {
 +        for (Map.Entry<String, Command> entry : commands.entrySet()) {
-+            MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "Leaves", entry.getValue());
++            MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "Iron", entry.getValue());
 +        }
 +    }
 +
 +    static boolean getBoolean(final String path, final boolean dfl) {
-+        LeavesConfig.config.addDefault(path, Boolean.valueOf(dfl));
-+        return LeavesConfig.config.getBoolean(path, dfl);
++        IronConfig.config.addDefault(path, Boolean.valueOf(dfl));
++        return IronConfig.config.getBoolean(path, dfl);
 +    }
 +
 +    static int getInt(final String path, final int dfl) {
-+        LeavesConfig.config.addDefault(path, Integer.valueOf(dfl));
-+        return LeavesConfig.config.getInt(path, dfl);
++        IronConfig.config.addDefault(path, Integer.valueOf(dfl));
++        return IronConfig.config.getInt(path, dfl);
 +    }
 +
 +    static long getLong(final String path, final long dfl) {
-+        LeavesConfig.config.addDefault(path, Long.valueOf(dfl));
-+        return LeavesConfig.config.getLong(path, dfl);
++        IronConfig.config.addDefault(path, Long.valueOf(dfl));
++        return Ironig.config.getLong(path, dfl);
 +    }
 +
 +    static double getDouble(final String path, final double dfl) {
-+        LeavesConfig.config.addDefault(path, Double.valueOf(dfl));
-+        return LeavesConfig.config.getDouble(path, dfl);
++        IronConfig.config.addDefault(path, Double.valueOf(dfl));
++        return IronConfig.config.getDouble(path, dfl);
 +    }
 +
 +    static String getString(final String path, final String dfl) {
-+        LeavesConfig.config.addDefault(path, dfl);
-+        return LeavesConfig.config.getString(path, dfl);
++        IronConfig.config.addDefault(path, dfl);
++        return IronConfig.config.getString(path, dfl);
 +    }
 +
 +    static <T> List<T> getList(final String path, final List<T> def) {
-+        LeavesConfig.config.addDefault(path, def);
-+        return (List<T>) LeavesConfig.config.getList(path, config.getList(path));
++        IronConfig.config.addDefault(path, def);
++        return (List<T>) IronConfig.config.getList(path, config.getList(path));
 +    }
 +
 +    public static boolean snowballAndEggCanKnockback = true;
@@ -353,9 +353,9 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +
 +    public static boolean noChatSign = true;
 +    private static void noChatSign() {
-+        if (LeavesConfig.config.contains("settings.modify.no-chat-sign")) {
-+            noChatSign = LeavesConfig.config.getBoolean("settings.modify.no-chat-sign");
-+            LeavesConfig.config.set("settings.modify.no-chat-sign", null);
++        if (IronConfig.config.contains("settings.modify.no-chat-sign")) {
++            noChatSign = IronConfig.config.getBoolean("settings.modify.no-chat-sign");
++            IronConfig.config.set("settings.modify.no-chat-sign", null);
 +        }
 +        noChatSign = getBoolean("settings.misc.no-chat-sign", noChatSign);
 +    }
@@ -370,7 +370,7 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +
 +        if (asyncMobSpawning) {
 +            asyncMobSpawning = false;
-+            LeavesLogger.LOGGER.severe("Async MobSpawning is updating, it can't work");
++            IronLogger.LOGGER.severe("Async MobSpawning is updating, it can't work");
 +        }
 +    }
 +
@@ -389,7 +389,7 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +
 +        if (asyncEntityTracker) {
 +            asyncEntityTracker = false;
-+            LeavesLogger.LOGGER.severe("Async EntityTracker is updating, it can't work");
++            IronLogger.LOGGER.severe("Async EntityTracker is updating, it can't work");
 +        }
 +    }
 +
@@ -488,7 +488,7 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +
 +        if (asyncPathfinding) {
 +            asyncPathfinding = false;
-+            LeavesLogger.LOGGER.severe("Async Pathfinding is updating, it can't work");
++            IronLogger.LOGGER.severe("Async Pathfinding is updating, it can't work");
 +        }
 +    }
 +
@@ -532,7 +532,7 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +        pcaSyncPlayerEntity = getString("settings.protocol.pca-sync-player-entity", pcaSyncPlayerEntity);
 +        if (!pcaSyncPlayerEntityList.contains(pcaSyncPlayerEntity)) {
 +            pcaSyncPlayerEntity = "OPS";
-+            LeavesLogger.LOGGER.severe("pca-sync-player-entity value error, reset to OPS");
++            IronLogger.LOGGER.severe("pca-sync-player-entity value error, reset to OPS");
 +        }
 +    }
 +
@@ -696,9 +696,9 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +        despawnEndermanWithBlock = getBoolean("settings.modify.despawn-enderman-with-block", despawnEndermanWithBlock);
 +    }
 +
-+    public static boolean leavesCarpetSupport = false;
-+    private static void leavesCarpetSupport() {
-+        leavesCarpetSupport = getBoolean("settings.protocol.leaves-carpet-support", leavesCarpetSupport);
++    public static boolean IronCarpetSupport = false;
++    private static void IronCarpetSupport() {
++        IronCarpetSupport = getBoolean("settings.protocol.Iron-carpet-support", IronCarpetSupport);
 +    }
 +
 +    public static void registerCarpetRules() {
@@ -783,26 +783,26 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +        }
 +
 +        public void init() {
-+            this.worldDefaults = LeavesConfig.config.getConfigurationSection("world-settings.default");
++            this.worldDefaults = IronConfig.config.getConfigurationSection("world-settings.default");
 +            if (this.worldDefaults == null) {
-+                this.worldDefaults = LeavesConfig.config.createSection("world-settings.default");
++                this.worldDefaults = IronConfig.config.createSection("world-settings.default");
 +            }
 +
-+            String worldSectionPath = LeavesConfig.configVersion < CURRENT_CONFIG_VERSION ? this.worldName : "world-settings.".concat(this.worldName);
-+            ConfigurationSection section = LeavesConfig.config.getConfigurationSection(worldSectionPath);
++            String worldSectionPath = IronConfig.configVersion < CURRENT_CONFIG_VERSION ? this.worldName : "world-settings.".concat(this.worldName);
++            ConfigurationSection section = IronConfig.config.getConfigurationSection(worldSectionPath);
 +            this.configPath = worldSectionPath;
-+            if (LeavesConfig.createWorldSections) {
++            if (IronConfig.createWorldSections) {
 +                if (section == null) {
-+                    section = LeavesConfig.config.createSection(worldSectionPath);
++                    section = IronConfig.config.createSection(worldSectionPath);
 +                }
-+                LeavesConfig.config.set(worldSectionPath, section);
++                IronConfig.config.set(worldSectionPath, section);
 +            }
 +
 +            this.load();
 +        }
 +
 +        public void load() {
-+            for (final Method method : LeavesConfig.WorldConfig.class.getDeclaredMethods()) {
++            for (final Method method : IronConfig.WorldConfig.class.getDeclaredMethods()) {
 +                if (method.getReturnType() != void.class || method.getParameterCount() != 0 ||
 +                    !Modifier.isPrivate(method.getModifiers()) || Modifier.isStatic(method.getModifiers())) {
 +                    continue;
@@ -817,22 +817,22 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +                }
 +            }
 +
-+            if (LeavesConfig.configVersion < CURRENT_CONFIG_VERSION) {
-+                ConfigurationSection oldSection = LeavesConfig.config.getConfigurationSection(this.worldName);
-+                LeavesConfig.config.set("world-settings.".concat(this.worldName), oldSection);
-+                LeavesConfig.config.set(this.worldName, null);
++            if (IronConfig.configVersion < CURRENT_CONFIG_VERSION) {
++                ConfigurationSection oldSection = IronConfig.config.getConfigurationSection(this.worldName);
++                IronConfig.config.set("world-settings.".concat(this.worldName), oldSection);
++                IronConfig.config.set(this.worldName, null);
 +            }
 +
 +            /* We re-save to add new options */
 +            try {
-+                LeavesConfig.config.save(LeavesConfig.configFile);
++                IronConfig.config.save(IronConfig.configFile);
 +            } catch (final Exception ex) {
-+                Bukkit.getLogger().log(Level.SEVERE, "Unable to save leaves config", ex);
++                Bukkit.getLogger().log(Level.SEVERE, "Unable to save Iron config", ex);
 +            }
 +        }
 +
 +        void set(final String path, final Object val) {
-+            final ConfigurationSection config = LeavesConfig.config.getConfigurationSection(this.configPath);
++            final ConfigurationSection config = IronConfig.config.getConfigurationSection(this.configPath);
 +            this.worldDefaults.set(path, val);
 +            if (config != null && config.get(path) != null) {
 +                config.set(path, val);
@@ -840,9 +840,9 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +        }
 +
 +        boolean getBoolean(final String path, final boolean dfl) {
-+            final ConfigurationSection config = LeavesConfig.config.getConfigurationSection(this.configPath);
++            final ConfigurationSection config = IronConfig.config.getConfigurationSection(this.configPath);
 +            this.worldDefaults.addDefault(path, Boolean.valueOf(dfl));
-+            if (LeavesConfig.configVersion < CURRENT_CONFIG_VERSION) {
++            if (IronConfig.configVersion < CURRENT_CONFIG_VERSION) {
 +                if (config != null && config.getBoolean(path) == dfl) {
 +                    config.set(path, null);
 +                }
@@ -851,8 +851,8 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +        }
 +
 +        boolean getBooleanRaw(final String path, final boolean dfl) {
-+            final ConfigurationSection config = LeavesConfig.config.getConfigurationSection(this.configPath);
-+            if (LeavesConfig.configVersion < CURRENT_CONFIG_VERSION) {
++            final ConfigurationSection config = IronConfig.config.getConfigurationSection(this.configPath);
++            if (IronConfig.configVersion < CURRENT_CONFIG_VERSION) {
 +                if (config != null && config.getBoolean(path) == dfl) {
 +                    config.set(path, null);
 +                }
@@ -861,9 +861,9 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +        }
 +
 +        int getInt(final String path, final int dfl) {
-+            final ConfigurationSection config = LeavesConfig.config.getConfigurationSection(this.configPath);
++            final ConfigurationSection config = IronConfig.config.getConfigurationSection(this.configPath);
 +            this.worldDefaults.addDefault(path, Integer.valueOf(dfl));
-+            if (LeavesConfig.configVersion < CURRENT_CONFIG_VERSION) {
++            if (IronConfig.configVersion < CURRENT_CONFIG_VERSION) {
 +                if (config != null && config.getInt(path) == dfl) {
 +                    config.set(path, null);
 +                }
@@ -872,8 +872,8 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +        }
 +
 +        int getIntRaw(final String path, final int dfl) {
-+            final ConfigurationSection config = LeavesConfig.config.getConfigurationSection(this.configPath);
-+            if (LeavesConfig.configVersion < CURRENT_CONFIG_VERSION) {
++            final ConfigurationSection config = IronConfig.config.getConfigurationSection(this.configPath);
++            if (IronConfig.configVersion < CURRENT_CONFIG_VERSION) {
 +                if (config != null && config.getInt(path) == dfl) {
 +                    config.set(path, null);
 +                }
@@ -882,9 +882,9 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +        }
 +
 +        long getLong(final String path, final long dfl) {
-+            final ConfigurationSection config = LeavesConfig.config.getConfigurationSection(this.configPath);
++            final ConfigurationSection config = IronConfig.config.getConfigurationSection(this.configPath);
 +            this.worldDefaults.addDefault(path, Long.valueOf(dfl));
-+            if (LeavesConfig.configVersion < CURRENT_CONFIG_VERSION) {
++            if (IronConfig.configVersion < CURRENT_CONFIG_VERSION) {
 +                if (config != null && config.getLong(path) == dfl) {
 +                    config.set(path, null);
 +                }
@@ -893,8 +893,8 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +        }
 +
 +        long getLongRaw(final String path, final long dfl) {
-+            final ConfigurationSection config = LeavesConfig.config.getConfigurationSection(this.configPath);
-+            if (LeavesConfig.configVersion < CURRENT_CONFIG_VERSION) {
++            final ConfigurationSection config = IronConfig.config.getConfigurationSection(this.configPath);
++            if (IronConfig.configVersion < CURRENT_CONFIG_VERSION) {
 +                if (config != null && config.getLong(path) == dfl) {
 +                    config.set(path, null);
 +                }
@@ -903,9 +903,9 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +        }
 +
 +        double getDouble(final String path, final double dfl) {
-+            final ConfigurationSection config = LeavesConfig.config.getConfigurationSection(this.configPath);
++            final ConfigurationSection config = IronConfig.config.getConfigurationSection(this.configPath);
 +            this.worldDefaults.addDefault(path, Double.valueOf(dfl));
-+            if (LeavesConfig.configVersion < CURRENT_CONFIG_VERSION) {
++            if (IronConfig.configVersion < CURRENT_CONFIG_VERSION) {
 +                if (config != null && config.getDouble(path) == dfl) {
 +                    config.set(path, null);
 +                }
@@ -914,8 +914,8 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +        }
 +
 +        double getDoubleRaw(final String path, final double dfl) {
-+            final ConfigurationSection config = LeavesConfig.config.getConfigurationSection(this.configPath);
-+            if (LeavesConfig.configVersion < CURRENT_CONFIG_VERSION) {
++            final ConfigurationSection config = IronConfig.config.getConfigurationSection(this.configPath);
++            if (IronConfig.configVersion < CURRENT_CONFIG_VERSION) {
 +                if (config != null && config.getDouble(path) == dfl) {
 +                    config.set(path, null);
 +                }
@@ -924,35 +924,35 @@ index 0000000000000000000000000000000000000000..00d2ee563d41ef75e50d13cedcbb77fa
 +        }
 +
 +        String getString(final String path, final String dfl) {
-+            final ConfigurationSection config = LeavesConfig.config.getConfigurationSection(this.configPath);
++            final ConfigurationSection config = IronConfig.config.getConfigurationSection(this.configPath);
 +            this.worldDefaults.addDefault(path, dfl);
 +            return config == null ? this.worldDefaults.getString(path) : config.getString(path, this.worldDefaults.getString(path));
 +        }
 +
 +        String getStringRaw(final String path, final String dfl) {
-+            final ConfigurationSection config = LeavesConfig.config.getConfigurationSection(this.configPath);
++            final ConfigurationSection config = IronConfig.config.getConfigurationSection(this.configPath);
 +            return config == null ? this.worldDefaults.getString(path, dfl) : config.getString(path, this.worldDefaults.getString(path, dfl));
 +        }
 +
 +        List getList(final String path, final List dfl) {
-+            final ConfigurationSection config = LeavesConfig.config.getConfigurationSection(this.configPath);
++            final ConfigurationSection config = IronConfig.config.getConfigurationSection(this.configPath);
 +            this.worldDefaults.addDefault(path, dfl);
 +            return config == null ? this.worldDefaults.getList(path) : config.getList(path, this.worldDefaults.getList(path));
 +        }
 +
 +        List getListRaw(final String path, final List dfl) {
-+            final ConfigurationSection config = LeavesConfig.config.getConfigurationSection(this.configPath);
++            final ConfigurationSection config = IronConfig.config.getConfigurationSection(this.configPath);
 +            return config == null ? this.worldDefaults.getList(path, dfl) : config.getList(path, this.worldDefaults.getList(path, dfl));
 +        }
 +    }
 +}
-diff --git a/src/main/java/top/leavesmc/leaves/command/CommandArgument.java b/src/main/java/top/leavesmc/leaves/command/CommandArgument.java
+diff --git a/src/main/java/top/Ironmc/Iron/command/CommandArgument.java b/src/main/java/top/Ironmc/Iron/command/CommandArgument.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..eadc6d168fb13299348b0c275ae352ee2f1e1ea2
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/command/CommandArgument.java
++++ b/src/main/java/top/Ironmc/Iron/command/CommandArgument.java
 @@ -0,0 +1,43 @@
-+package top.leavesmc.leaves.command;
++package top.Ironmc.Iron.command;
 +
 +import org.jetbrains.annotations.NotNull;
 +
@@ -995,13 +995,13 @@ index 0000000000000000000000000000000000000000..eadc6d168fb13299348b0c275ae352ee
 +        return new CommandArgumentResult(new ArrayList<>(Arrays.asList(result)));
 +    }
 +}
-diff --git a/src/main/java/top/leavesmc/leaves/command/CommandArgumentResult.java b/src/main/java/top/leavesmc/leaves/command/CommandArgumentResult.java
+diff --git a/src/main/java/top/Ironmc/Iron/command/CommandArgumentResult.java b/src/main/java/top/Ironmc/Iron/command/CommandArgumentResult.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..340eaca64c96180b895a075ce9e44402cd104eed
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/command/CommandArgumentResult.java
++++ b/src/main/java/top/Ironmc/Iron/command/CommandArgumentResult.java
 @@ -0,0 +1,62 @@
-+package top.leavesmc.leaves.command;
++package top.Ironmc.Iron.command;
 +
 +import net.minecraft.core.BlockPos;
 +import org.bukkit.util.Vector;
@@ -1063,13 +1063,13 @@ index 0000000000000000000000000000000000000000..340eaca64c96180b895a075ce9e44402
 +    }
 +
 +}
-diff --git a/src/main/java/top/leavesmc/leaves/command/CommandArgumentType.java b/src/main/java/top/leavesmc/leaves/command/CommandArgumentType.java
+diff --git a/src/main/java/top/Ironmc/Iron/command/CommandArgumentType.java b/src/main/java/top/Ironmc/Iron/command/CommandArgumentType.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..edf12195c7224ca2fb5d3c2ac3fcf485d3049d07
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/command/CommandArgumentType.java
++++ b/src/main/java/top/Ironmc/Iron/command/CommandArgumentType.java
 @@ -0,0 +1,37 @@
-+package top.leavesmc.leaves.command;
++package top.Ironmc.Iron.command;
 +
 +import org.jetbrains.annotations.NotNull;
 +

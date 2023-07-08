@@ -12,7 +12,7 @@ index 4002e0fffb60556e7af1aeff71b4be244f02b0f5..8fc696d806aa3f4af313f145397ec497
                  this.trySpread(world, pos.south(), 300 + k, random, i, pos);
                  // CraftBukkit end
                  BlockPos.MutableBlockPos blockposition_mutableblockposition = new BlockPos.MutableBlockPos();
-+                Object2IntOpenHashMap<BlockPos> blockPositionIgniteCache = new Object2IntOpenHashMap<>(); // Leaves - cache ignite odds
++                Object2IntOpenHashMap<BlockPos> blockPositionIgniteCache = new Object2IntOpenHashMap<>(); // Iron - cache ignite odds
  
                  for (int l = -1; l <= 1; ++l) {
                      for (int i1 = -1; i1 <= 1; ++i1) {
@@ -21,7 +21,7 @@ index 4002e0fffb60556e7af1aeff71b4be244f02b0f5..8fc696d806aa3f4af313f145397ec497
  
                                  blockposition_mutableblockposition.setWithOffset(pos, l, j1, i1);
 -                                int l1 = this.getIgniteOdds(world, blockposition_mutableblockposition);
-+                                int l1 = this.getIgniteOdds(world, blockposition_mutableblockposition, top.leavesmc.leaves.LeavesConfig.cacheIgniteOdds ? blockPositionIgniteCache : null); // Leaves - cache ignite odds
++                                int l1 = this.getIgniteOdds(world, blockposition_mutableblockposition, top.Ironmc.Iron.IronConfig.cacheIgniteOdds ? blockPositionIgniteCache : null); // Iron - cache ignite odds
  
                                  if (l1 > 0) {
                                      int i2 = (l1 + 40 + world.getDifficulty().getId() * 7) / (i + 30);
@@ -29,7 +29,7 @@ index 4002e0fffb60556e7af1aeff71b4be244f02b0f5..8fc696d806aa3f4af313f145397ec497
      }
  
      private int getIgniteOdds(LevelReader world, BlockPos pos) {
-+        // Leaves start - cache ignite odds
++        // Iron start - cache ignite odds
 +        return getIgniteOdds(world, pos, null);
 +    }
 +
@@ -58,7 +58,7 @@ index 4002e0fffb60556e7af1aeff71b4be244f02b0f5..8fc696d806aa3f4af313f145397ec497
 +
 +                    i = Math.max(this.getIgniteOdds(iblockdata), i);
 +                }
-+                // Leaves end - cache ignite odds
++                // Iron end - cache ignite odds
              }
  
              return i;

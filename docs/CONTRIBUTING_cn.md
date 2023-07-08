@@ -1,7 +1,7 @@
-Contributing to Leaves
+Contributing to iron
 ===========
 
-[English](https://github.com/LeavesMC/Leaves/blob/master/docs/CONTRIBUTING.md) | **中文**
+[English](https://github.com/ironMC/iron/blob/master/docs/CONTRIBUTING.md) | **中文**
 
 
 我们很开心您想为我们的项目做出共享。一般来说，我们对PR的审核是十分宽松的，
@@ -29,10 +29,10 @@ Contributing to Leaves
 
 ## 了解补丁
 
-Leaves使用和Paper一样的补丁系统，并为了针对不同部分的修改分成了两个目录
+iron使用和Paper一样的补丁系统，并为了针对不同部分的修改分成了两个目录
 
-- `leaves-api` - 对 `Paper-API`/`Spigot-API`/`Bukkit` 进行的修改
-- `leaves-server` - 对 `Paper`/`Spigot`/`CraftBukkit` 进行的修改
+- `iron-api` - 对 `Paper-API`/`Spigot-API`/`Bukkit` 进行的修改
+- `iron-server` - 对 `Paper`/`Spigot`/`CraftBukkit` 进行的修改
 
 补丁系统是基于git的，你可以在这里了解git的基本内容 <https://git-scm.com/docs/gittutorial>
 
@@ -40,19 +40,19 @@ Leaves使用和Paper一样的补丁系统，并为了针对不同部分的修改
 
 1. 将你的仓库clone到本地
 2. 在你的IDE或终端内执行gradle的`applyPatches`任务，如果是在终端内，你可以执行`./gradlew applyPatches`
-3. 进入`leaves-server`或`leaves-api`进行修改
+3. 进入`iron-server`或`iron-api`进行修改
 
-`leaves-server`和`leaves-api`并不是正常的git仓库
+`iron-server`和`iron-api`并不是正常的git仓库
 
 - 在应用补丁前，基点将会指向未被更改的源码
 - 在基点后的每一个提交都是一个补丁
-- 只有在paper最后一个提交后的提交才会被视为leaves补丁
+- 只有在paper最后一个提交后的提交才会被视为iron补丁
 
 ## 增加补丁
 
 按照以下步骤增加一个补丁是非常简单的
 
-1. 对`leaves-server`或者/和`leaves-api`进行修改
+1. 对`iron-server`或者/和`iron-api`进行修改
 2. 使用git添加你的修改，比如`git add .`
 3. 使用`git commit -m <提交信息>`进行提交
 4. 运行gradle任务`rebuildPatches`将你的提交转化为一个补丁

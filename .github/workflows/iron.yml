@@ -31,8 +31,8 @@ jobs:
         distribution: 'zulu'
     - name: Setup Git Config
       run: |
-        git config --global user.email "ci@leavesmc.top"
-        git config --global user.name "Leaves CI"
+        git config --global user.email "ci@ironmc.top"
+        git config --global user.name "iron CI"
     - name: Apply Patches
       uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
       with:

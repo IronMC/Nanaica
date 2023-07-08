@@ -13,14 +13,14 @@ index e2a25c29ec74147b3e66aa0b3deb85a8f6ee53a5..e65ce75e2d44843afa6c4a033885a55d
          return this.lookControl;
      }
  
-+    int inactiveTickDisableCounter = 0; // Leaves - throttle inactive goal selector ticking
++    int inactiveTickDisableCounter = 0; // Iron - throttle inactive goal selector ticking
      // Paper start
      @Override
      public void inactiveTick() {
          super.inactiveTick();
 -        if (this.goalSelector.inactiveTick()) {
-+        boolean isThrottled = top.leavesmc.leaves.LeavesConfig.throttleInactiveGoalSelectorTick && inactiveTickDisableCounter++ % 20 != 0; // Leaves - throttle inactive goal selector ticking
-+        if (this.goalSelector.inactiveTick() && !isThrottled) { // Leaves - throttle inactive goal selector ticking
++        boolean isThrottled = top.Ironmc.Iron.IronConfig.throttleInactiveGoalSelectorTick && inactiveTickDisableCounter++ % 20 != 0; // Iron - throttle inactive goal selector ticking
++        if (this.goalSelector.inactiveTick() && !isThrottled) { // Iron - throttle inactive goal selector ticking
              this.goalSelector.tick();
          }
          if (this.targetSelector.inactiveTick()) {

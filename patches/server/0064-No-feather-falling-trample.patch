@@ -12,13 +12,13 @@ index 552d8c8f3f56bfccd25d11488ed7ec1644a92f47..a0af2e1b417a311464d09d3a9fb458f9
      public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
          super.fallOn(world, state, pos, entity, fallDistance); // CraftBukkit - moved here as game rules / events shouldn't affect fall damage.
          if (!world.isClientSide && world.random.nextFloat() < fallDistance - 0.5F && entity instanceof LivingEntity && (entity instanceof Player || world.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) && entity.getBbWidth() * entity.getBbWidth() * entity.getBbHeight() > 0.512F) {
-+            // Leaves start - noFeatherFallingTrample
-+            if (top.leavesmc.leaves.LeavesConfig.noFeatherFallingTrample) {
++            // Iron start - noFeatherFallingTrample
++            if (top.Ironmc.Iron.IronConfig.noFeatherFallingTrample) {
 +                if (net.minecraft.world.item.enchantment.EnchantmentHelper.getEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantments.FALL_PROTECTION, (LivingEntity) entity) > 0) {
 +                    return;
 +                }
 +            }
-+            // Leaves end - noFeatherFallingTrample
++            // Iron end - noFeatherFallingTrample
              // CraftBukkit start - Interact soil
              org.bukkit.event.Cancellable cancellable;
              if (entity instanceof Player) {

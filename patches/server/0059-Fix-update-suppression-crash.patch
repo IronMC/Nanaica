@@ -12,10 +12,10 @@ index d2f0a0755317f5fa9a1ccf7db346aa77fd287d80..9c7fb1b7c2ff458e72bdcfa80c49252c
                      co.aikar.timings.Timing timing = co.aikar.timings.MinecraftTimings.getPacketTiming(packet); // Paper - timings
                      try (co.aikar.timings.Timing ignored = timing.startTiming()) { // Paper - timings
                          packet.handle(listener);
-+                    // Leaves start - update suppression crash fix
-+                    } catch (top.leavesmc.leaves.util.UpdateSuppressionException exception) {
-+                        top.leavesmc.leaves.LeavesLogger.LOGGER.info(exception.getMessage());
-+                    // Leaves start - update suppression crash fix
++                    // Iron start - update suppression crash fix
++                    } catch (top.Ironmc.Iron.util.UpdateSuppressionException exception) {
++                        top.Ironmc.Iron.IronLogger.LOGGER.info(exception.getMessage());
++                    // Iron start - update suppression crash fix
                      } catch (Exception exception) {
                          if (listener.shouldPropagateHandlingExceptions()) {
                              throw exception;
@@ -28,13 +28,13 @@ index c358f6de2947e16da54acdc7809c70ffae331944..32c6d55851c1ef74476bfa570405e520
              try {
                  worldserver.timings.doTick.startTiming(); // Spigot
 -                worldserver.tick(shouldKeepTicking);
-+                // Leaves start
++                // Iron start
 +                try {
 +                    worldserver.tick(shouldKeepTicking);
-+                } catch (top.leavesmc.leaves.util.UpdateSuppressionException e) {
-+                    top.leavesmc.leaves.LeavesLogger.LOGGER.info(e.getMessage());
++                } catch (top.Ironmc.Iron.util.UpdateSuppressionException e) {
++                    top.Ironmc.Iron.IronLogger.LOGGER.info(e.getMessage());
 +                }
-+                // Leaves end
++                // Iron end
                  // Paper start
                  for (final io.papermc.paper.chunk.SingleThreadChunkRegionManager regionManager : worldserver.getChunkSource().chunkMap.regionManagers) {
                      regionManager.recalculateRegions();
@@ -47,17 +47,17 @@ index b51155ad12515b2d0dd0f202580b9f455c114d9a..49a4a19fd5292552e91799203108084f
      @Override
      public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
 -        return AbstractContainerMenu.getRedstoneSignalFromContainer((Container)world.getBlockEntity(pos));
-+        // Leaves start - fix update suppression crash
-+        if (top.leavesmc.leaves.LeavesConfig.updateSuppressionCrashFix) {
++        // Iron start - fix update suppression crash
++        if (top.Ironmc.Iron.IronConfig.updateSuppressionCrashFix) {
 +            try {
 +                return AbstractContainerMenu.getRedstoneSignalFromContainer((Container)world.getBlockEntity(pos));
 +            } catch (ClassCastException ex) {
-+                throw new top.leavesmc.leaves.util.UpdateSuppressionException(null, pos);
++                throw new top.Ironmc.Iron.util.UpdateSuppressionException(null, pos);
 +            }
 +        } else {
 +            return AbstractContainerMenu.getRedstoneSignalFromContainer((Container)world.getBlockEntity(pos));
 +        }
-+        // Leaves end - fix update suppression crash
++        // Iron end - fix update suppression crash
      }
  
      @Override
@@ -69,27 +69,27 @@ index 19faa8f5f891c1ffbed0af8391dee8202433c447..2ef9510ee382dfcc25a213684c0acdbc
              state.neighborChanged(world, pos, sourceBlock, sourcePos, notify);
              // Spigot Start
          } catch (StackOverflowError ex) {
-+            // Leaves start - fix update suppression crash
-+            if (top.leavesmc.leaves.LeavesConfig.updateSuppressionCrashFix) {
-+                throw new top.leavesmc.leaves.util.UpdateSuppressionException(pos, sourcePos);
++            // Iron start - fix update suppression crash
++            if (top.Ironmc.Iron.IronConfig.updateSuppressionCrashFix) {
++                throw new top.Ironmc.Iron.util.UpdateSuppressionException(pos, sourcePos);
 +            }
              world.lastPhysicsProblem = new BlockPos(pos);
              // Spigot End
          } catch (Throwable throwable) {
-+            if (top.leavesmc.leaves.LeavesConfig.updateSuppressionCrashFix) {
-+                throw new top.leavesmc.leaves.util.UpdateSuppressionException(pos, sourcePos);
++            if (top.Ironmc.Iron.IronConfig.updateSuppressionCrashFix) {
++                throw new top.Ironmc.Iron.util.UpdateSuppressionException(pos, sourcePos);
 +            }
-+            // Leaves end - fix update suppression crash
++            // Iron end - fix update suppression crash
              CrashReport crashreport = CrashReport.forThrowable(throwable, "Exception while updating neighbours");
              CrashReportCategory crashreportsystemdetails = crashreport.addCategory("Block being updated");
  
-diff --git a/src/main/java/top/leavesmc/leaves/util/UpdateSuppressionException.java b/src/main/java/top/leavesmc/leaves/util/UpdateSuppressionException.java
+diff --git a/src/main/java/top/Ironmc/Iron/util/UpdateSuppressionException.java b/src/main/java/top/Ironmc/Iron/util/UpdateSuppressionException.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..f9a9f3e28bebdaa5038ebf81ac53447182c2bc10
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/util/UpdateSuppressionException.java
++++ b/src/main/java/top/Ironmc/Iron/util/UpdateSuppressionException.java
 @@ -0,0 +1,33 @@
-+package top.leavesmc.leaves.util;
++package top.Ironmc.Iron.util;
 +
 +import net.minecraft.core.BlockPos;
 +

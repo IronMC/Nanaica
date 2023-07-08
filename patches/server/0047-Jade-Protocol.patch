@@ -10,11 +10,11 @@ index 0a2cb031a3a4ed0ba7a62c782a737cb02207f8dd..35295d8577acf11bd701ef2a7aa1bab3
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -3557,6 +3557,9 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
-                 if (top.leavesmc.leaves.LeavesConfig.bborProtocol && packet.identifier.equals(top.leavesmc.leaves.protocol.BBORProtocol.SUBSCRIBE)) {
-                     top.leavesmc.leaves.protocol.BBORProtocol.onPlayerSubscribed(player);
+                 if (top.Ironmc.Iron.IronConfig.bborProtocol && packet.identifier.equals(top.Ironmc.Iron.protocol.BBORProtocol.SUBSCRIBE)) {
+                     top.Ironmc.Iron.protocol.BBORProtocol.onPlayerSubscribed(player);
                  }
-+                if (top.leavesmc.leaves.LeavesConfig.jadeProtocol && ProtocolUtils.isNamespacePacket(packet, top.leavesmc.leaves.protocol.JadeProtocol.PROTOCOL_ID)) {
-+                    top.leavesmc.leaves.protocol.JadeProtocol.handlePacket(server, player, packet);
++                if (top.Ironmc.Iron.IronConfig.jadeProtocol && ProtocolUtils.isNamespacePacket(packet, top.Ironmc.Iron.protocol.JadeProtocol.PROTOCOL_ID)) {
++                    top.Ironmc.Iron.protocol.JadeProtocol.handlePacket(server, player, packet);
 +                }
              } catch (Exception ex) {
                  ServerGamePacketListenerImpl.LOGGER.error("Couldn\'t dispatch custom payload", ex);
@@ -24,10 +24,10 @@ index 666d7e33a26bc973fa87561503f032ec7f61bd0b..52b7d704f1a13e215da586a45da9c554
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -358,6 +358,7 @@ public abstract class PlayerList {
-         // Leaves end - bot support
-         top.leavesmc.leaves.protocol.PcaSyncProtocol.onJoin(player); // Leaves - pca
-         top.leavesmc.leaves.protocol.BBORProtocol.onPlayerLoggedIn(player); // Leaves - bbor
-+        top.leavesmc.leaves.protocol.JadeProtocol.onPlayerJoin(player); // Leaves - Jade
+         // Iron end - bot support
+         top.Ironmc.Iron.protocol.PcaSyncProtocol.onJoin(player); // Iron - pca
+         top.Ironmc.Iron.protocol.BBORProtocol.onPlayerLoggedIn(player); // Iron - bbor
++        top.Ironmc.Iron.protocol.JadeProtocol.onPlayerJoin(player); // Iron - Jade
  
          final net.kyori.adventure.text.Component jm = playerJoinEvent.joinMessage();
  
@@ -40,7 +40,7 @@ index 4aeab90e778629c355189dfe79c39c4b21f5f5ac..fe8c9b7e7956837829b4fe3eb449b2c0
      }
  
 -    private int getTicksLeftUntilAdult() {
-+    public int getTicksLeftUntilAdult() { // Leaves - private -> public
++    public int getTicksLeftUntilAdult() { // Iron - private -> public
          return Math.max(0, Tadpole.ticksToBeFrog - this.age);
      }
  
@@ -51,30 +51,30 @@ index 6a8c524d401e421dbf6aa7a40d12e1e1b44f6110..6888d0b096b665a10cf6b050a4e69be1
 @@ -466,6 +466,7 @@ public final class CraftServer implements Server {
          }
          datapackManager = new io.papermc.paper.datapack.PaperDatapackManager(console.getPackRepository()); // Paper
-         top.leavesmc.leaves.protocol.PcaSyncProtocol.init(); // Leaves - pca
-+        top.leavesmc.leaves.protocol.JadeProtocol.init(); // Leaves - Jade
+         top.Ironmc.Iron.protocol.PcaSyncProtocol.init(); // Iron - pca
++        top.Ironmc.Iron.protocol.JadeProtocol.init(); // Iron - Jade
      }
  
      public boolean getCommandBlockOverride(String command) {
 @@ -1072,6 +1073,11 @@ public final class CraftServer implements Server {
-             top.leavesmc.leaves.protocol.BBORProtocol.loggedOutAllPlayer();
+             top.Ironmc.Iron.protocol.BBORProtocol.loggedOutAllPlayer();
          }
-         // Leaves end - bbor
-+        // Leaves start - Jade
-+        if (top.leavesmc.leaves.LeavesConfig.jadeProtocol) {
-+            top.leavesmc.leaves.protocol.JadeProtocol.enableAllPlayer();
+         // Iron end - bbor
++        // Iron start - Jade
++        if (top.Ironmc.Iron.IronConfig.jadeProtocol) {
++            top.Ironmc.Iron.protocol.JadeProtocol.enableAllPlayer();
 +        }
-+        // Leaves end - Jade
++        // Iron end - Jade
          for (ServerLevel world : this.console.getAllLevels()) {
              // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
              world.setSpawnSettings(world.serverLevelData.getDifficulty() != Difficulty.PEACEFUL && config.spawnMonsters, config.spawnAnimals); // Paper - per level difficulty (from MinecraftServer#setDifficulty(ServerLevel, Difficulty, boolean))
-diff --git a/src/main/java/top/leavesmc/leaves/protocol/JadeProtocol.java b/src/main/java/top/leavesmc/leaves/protocol/JadeProtocol.java
+diff --git a/src/main/java/top/Ironmc/Iron/protocol/JadeProtocol.java b/src/main/java/top/Ironmc/Iron/protocol/JadeProtocol.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..2d366c44e1809d5d046017e08542453acc920520
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/protocol/JadeProtocol.java
++++ b/src/main/java/top/Ironmc/Iron/protocol/JadeProtocol.java
 @@ -0,0 +1,579 @@
-+package top.leavesmc.leaves.protocol;
++package top.Ironmc.Iron.protocol;
 +
 +import com.google.common.cache.Cache;
 +import com.google.common.cache.CacheBuilder;
@@ -140,9 +140,9 @@ index 0000000000000000000000000000000000000000..2d366c44e1809d5d046017e08542453a
 +import org.jetbrains.annotations.Contract;
 +import org.jetbrains.annotations.NotNull;
 +import org.jetbrains.annotations.Nullable;
-+import top.leavesmc.leaves.LeavesConfig;
-+import top.leavesmc.leaves.LeavesLogger;
-+import top.leavesmc.leaves.util.ProtocolUtils;
++import top.Ironmc.Iron.IronConfig;
++import top.Ironmc.Iron.IronLogger;
++import top.Ironmc.Iron.util.ProtocolUtils;
 +
 +import java.util.Collection;
 +import java.util.HashMap;
@@ -178,7 +178,7 @@ index 0000000000000000000000000000000000000000..2d366c44e1809d5d046017e08542453a
 +    }
 +
 +    public static void onPlayerJoin(ServerPlayer player) {
-+        if (LeavesConfig.jadeProtocol) {
++        if (IronConfig.jadeProtocol) {
 +            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 +            buf.writeUtf("{}");
 +            ProtocolUtils.sendPayloadPacket(player, PACKET_SERVER_PING, buf);
@@ -198,7 +198,7 @@ index 0000000000000000000000000000000000000000..2d366c44e1809d5d046017e08542453a
 +    }
 +
 +    public static void handlePacket(MinecraftServer server, ServerPlayer player, @NotNull ServerboundCustomPayloadPacket packet) {
-+        globalReceivers.getOrDefault(packet.identifier, ((server1, player1, buf) -> LeavesLogger.LOGGER.severe("NullPotion"))).accept(server, player, packet.data);
++        globalReceivers.getOrDefault(packet.identifier, ((server1, player1, buf) -> IronLogger.LOGGER.severe("NullPotion"))).accept(server, player, packet.data);
 +    }
 +
 +    public static void init() {
@@ -393,7 +393,7 @@ index 0000000000000000000000000000000000000000..2d366c44e1809d5d046017e08542453a
 +    }
 +
 +    public static void requestEntityData(MinecraftServer server, ServerPlayer player, FriendlyByteBuf buf) {
-+        if (!LeavesConfig.jadeProtocol) {
++        if (!IronConfig.jadeProtocol) {
 +            return;
 +        }
 +
@@ -427,7 +427,7 @@ index 0000000000000000000000000000000000000000..2d366c44e1809d5d046017e08542453a
 +    }
 +
 +    public static void requestTileData(MinecraftServer server, ServerPlayer player, FriendlyByteBuf buf) {
-+        if (!LeavesConfig.jadeProtocol) {
++        if (!IronConfig.jadeProtocol) {
 +            return;
 +        }
 +

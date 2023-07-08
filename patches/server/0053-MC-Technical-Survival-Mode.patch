@@ -13,7 +13,7 @@ index ad2177cdbc61a6f41c7e2ed81af262d4ffe7d861..4a0da4436998fc21506996216bd9c094
              for (ServerLevel level : server.getAllLevels()) {
                  this.createWorldConfig(createWorldContextMap(level), reloader(this.worldConfigClass, level.paperConfig()));
              }
-+            top.leavesmc.leaves.LeavesConfig.doMcTechnicalMode(); // Leaves - mc technical survival mode
++            top.Ironmc.Iron.IronConfig.doMcTechnicalMode(); // Iron - mc technical survival mode
          } catch (Exception ex) {
              throw new RuntimeException("Could not reload paper configuration files", ex);
          }
@@ -26,7 +26,7 @@ index ffc5b68c4246a7111845230a75552bb15875a209..990cdebf1b9e64a5001c71411e64f681
              }
              // Paper start - Fix invulnerable end crystals
 -            if (this.level().paperConfig().unsupportedSettings.fixInvulnerableEndCrystalExploit && this.generatedByDragonFight && this.isInvulnerable()) {
-+            if (!top.leavesmc.leaves.LeavesConfig.mcTechnicalMode && this.level().paperConfig().unsupportedSettings.fixInvulnerableEndCrystalExploit && this.generatedByDragonFight && this.isInvulnerable()) { // Leaves - mc technical survival mode
++            if (!top.Ironmc.Iron.IronConfig.mcTechnicalMode && this.level().paperConfig().unsupportedSettings.fixInvulnerableEndCrystalExploit && this.generatedByDragonFight && this.isInvulnerable()) { // Iron - mc technical survival mode
                  if (!java.util.Objects.equals(((ServerLevel) this.level()).uuid, this.getOriginWorld())
                      || ((ServerLevel) this.level()).getDragonFight() == null
                      || ((ServerLevel) this.level()).getDragonFight().respawnStage == null
@@ -39,7 +39,7 @@ index 4ce3e69970dd9eb251d0538a2d233ca30e9e5e47..25a01ca42b8f2f0590965edbeca9c1f9
      @Override
      public void tick() {
 -        if (this.level().spigotConfig.maxTntTicksPerTick > 0 && ++this.level().spigotConfig.currentPrimedTnt > this.level().spigotConfig.maxTntTicksPerTick) { return; } // Spigot
-+        if (this.level().spigotConfig.maxTntTicksPerTick > 0 && ++this.level().spigotConfig.currentPrimedTnt > (top.leavesmc.leaves.LeavesConfig.mcTechnicalMode ? 2000 : this.level().spigotConfig.maxTntTicksPerTick)) { return; } // Spigot // Leaves - mc technical survival mode
++        if (this.level().spigotConfig.maxTntTicksPerTick > 0 && ++this.level().spigotConfig.currentPrimedTnt > (top.Ironmc.Iron.IronConfig.mcTechnicalMode ? 2000 : this.level().spigotConfig.maxTntTicksPerTick)) { return; } // Spigot // Iron - mc technical survival mode
          if (!this.isNoGravity()) {
              this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.04D, 0.0D));
          }
@@ -52,7 +52,7 @@ index e30d5ae3e2900f43d7cafde71b8196f26e872841..79bfd7b5da13197c2d3f7dbf9c3154dd
          if (interaction == ReputationEventType.ZOMBIE_VILLAGER_CURED) {
              // Paper start - fix MC-181190
 -            if (this.level().paperConfig().fixes.fixCuringZombieVillagerDiscountExploit) {
-+            if (!top.leavesmc.leaves.LeavesConfig.mcTechnicalMode && this.level().paperConfig().fixes.fixCuringZombieVillagerDiscountExploit) { // Leaves - mc technical survival mode
++            if (!top.Ironmc.Iron.IronConfig.mcTechnicalMode && this.level().paperConfig().fixes.fixCuringZombieVillagerDiscountExploit) { // Iron - mc technical survival mode
                  final GossipContainer.EntityGossips playerReputation = this.getGossips().gossips.get(entity.getUUID());
                  if (playerReputation != null) {
                      playerReputation.remove(GossipType.MAJOR_POSITIVE);
@@ -65,15 +65,15 @@ index c767257b56acbe2cde391f405c010f5b2f62a17c..4327ec0948fb82939272f2dc1bbde8b1
              if (enumcreaturetype != MobCategory.MISC) {
                  // Paper start - Only count natural spawns
 -                if (!entity.level().paperConfig().entities.spawning.countAllMobsForSpawning &&
-+                if (!top.leavesmc.leaves.LeavesConfig.mcTechnicalMode && !entity.level().paperConfig().entities.spawning.countAllMobsForSpawning && // Leaves - mc technical survival mode
++                if (!top.Ironmc.Iron.IronConfig.mcTechnicalMode && !entity.level().paperConfig().entities.spawning.countAllMobsForSpawning && // Iron - mc technical survival mode
                      !(entity.spawnReason == org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.NATURAL ||
                          entity.spawnReason == org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.CHUNK_GEN)) {
                      continue;
-diff --git a/src/main/java/top/leavesmc/leaves/LeavesConfig.java b/src/main/java/top/leavesmc/leaves/LeavesConfig.java
+diff --git a/src/main/java/top/Ironmc/Iron/IronConfig.java b/src/main/java/top/Ironmc/Iron/IronConfig.java
 index 774402b89c2eb1daee2e7cbedb4a2461f19ae9b8..ffe31cf433c26264ab4d2e80bdbea166f79b614d 100644
---- a/src/main/java/top/leavesmc/leaves/LeavesConfig.java
-+++ b/src/main/java/top/leavesmc/leaves/LeavesConfig.java
-@@ -2,6 +2,7 @@ package top.leavesmc.leaves;
+--- a/src/main/java/top/Ironmc/Iron/IronConfig.java
++++ b/src/main/java/top/Ironmc/Iron/IronConfig.java
+@@ -2,6 +2,7 @@ package top.Ironmc.Iron;
  
  import com.destroystokyo.paper.util.SneakyThrow;
  import com.google.common.base.Throwables;
@@ -81,7 +81,7 @@ index 774402b89c2eb1daee2e7cbedb4a2461f19ae9b8..ffe31cf433c26264ab4d2e80bdbea166
  import net.minecraft.server.MinecraftServer;
  import net.minecraft.world.level.block.Blocks;
  import net.minecraft.world.level.material.PushReaction;
-@@ -476,6 +477,13 @@ public final class LeavesConfig {
+@@ -476,6 +477,13 @@ public final class IronConfig {
  
      public static void doMcTechnicalMode() {
          if (mcTechnicalMode) {

@@ -32,7 +32,7 @@ index b9e3c9cd709d42bced85436720ccc7b9c7e49552..90f193caf333d39e9494f1596d49b4a5
 -                }
 -                // Paper end - break redstone on trapdoors early
 -                if (open) { // Paper - break redstone on trapdoors early
-+                if ((Boolean) state.getValue(TrapDoorBlock.OPEN) != flag1) { // Leaves - it is feature, not bug!
++                if ((Boolean) state.getValue(TrapDoorBlock.OPEN) != flag1) { // Iron - it is feature, not bug!
                      state = (BlockState) state.setValue(TrapDoorBlock.OPEN, flag1);
                      this.playSound((Player) null, world, pos, flag1);
                  }

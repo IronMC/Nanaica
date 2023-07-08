@@ -23,20 +23,20 @@ index 65012a12e1430956ef55ced56773e6354ac26444..fe43432da26a3570c993b5592b7b8020
 -            return long2FloatLinkedOpenHashMap;
 -        });
 -    });
-+    // Leaves start - use our cache
++    // Iron start - use our cache
 +    private final ThreadLocal<Long2FloatLinkedOpenHashMap> temperatureCache;
-+    private final ThreadLocal<top.leavesmc.leaves.structs.Long2FloatAgingCache> temperatureAgingCache;
++    private final ThreadLocal<top.Ironmc.Iron.structs.Long2FloatAgingCache> temperatureAgingCache;
  
      Biome(Biome.ClimateSettings weather, BiomeSpecialEffects effects, BiomeGenerationSettings generationSettings, MobSpawnSettings spawnSettings) {
          this.climateSettings = weather;
          this.generationSettings = generationSettings;
          this.mobSettings = spawnSettings;
          this.specialEffects = effects;
-+        if (top.leavesmc.leaves.LeavesConfig.biomeTemperaturesUseAgingCache) {
++        if (top.Ironmc.Iron.IronConfig.biomeTemperaturesUseAgingCache) {
 +            temperatureCache = null;
 +            temperatureAgingCache = ThreadLocal.withInitial(() -> {
 +                return Util.make(() -> {
-+                    return new top.leavesmc.leaves.structs.Long2FloatAgingCache(TEMPERATURE_CACHE_SIZE);
++                    return new top.Ironmc.Iron.structs.Long2FloatAgingCache(TEMPERATURE_CACHE_SIZE);
 +                });
 +            });
 +        } else {
@@ -53,7 +53,7 @@ index 65012a12e1430956ef55ced56773e6354ac26444..fe43432da26a3570c993b5592b7b8020
 +            temperatureAgingCache = null;
 +        }
      }
-+    // Leaves end - use our cache
++    // Iron end - use our cache
  
      public int getSkyColor() {
          return this.specialEffects.getSkyColor();
@@ -69,9 +69,9 @@ index 65012a12e1430956ef55ced56773e6354ac26444..fe43432da26a3570c993b5592b7b8020
 -            float g = this.getHeightAdjustedTemperature(blockPos);
 -            if (long2FloatLinkedOpenHashMap.size() == 1024) {
 -                long2FloatLinkedOpenHashMap.removeFirstFloat();
-+        // Leaves start - use our cache
-+        if (top.leavesmc.leaves.LeavesConfig.biomeTemperaturesUseAgingCache) {
-+            top.leavesmc.leaves.structs.Long2FloatAgingCache cache = this.temperatureAgingCache.get();
++        // Iron start - use our cache
++        if (top.Ironmc.Iron.IronConfig.biomeTemperaturesUseAgingCache) {
++            top.Ironmc.Iron.structs.Long2FloatAgingCache cache = this.temperatureAgingCache.get();
 +            float f = cache.getValue(l);
 +            if (!Float.isNaN(f)) {
 +                return f;
@@ -97,17 +97,17 @@ index 65012a12e1430956ef55ced56773e6354ac26444..fe43432da26a3570c993b5592b7b8020
 +                return g;
 +            }
          }
-+        // Leaves end - use our cache
++        // Iron end - use our cache
      }
  
      public boolean shouldFreeze(LevelReader world, BlockPos blockPos) {
-diff --git a/src/main/java/top/leavesmc/leaves/structs/Long2FloatAgingCache.java b/src/main/java/top/leavesmc/leaves/structs/Long2FloatAgingCache.java
+diff --git a/src/main/java/top/Ironmc/Iron/structs/Long2FloatAgingCache.java b/src/main/java/top/Ironmc/Iron/structs/Long2FloatAgingCache.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..26f9d4d9099739d6ddc159184a20e2ae9abde5cd
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/structs/Long2FloatAgingCache.java
++++ b/src/main/java/top/Ironmc/Iron/structs/Long2FloatAgingCache.java
 @@ -0,0 +1,121 @@
-+package top.leavesmc.leaves.structs;
++package top.Ironmc.Iron.structs;
 +
 +import it.unimi.dsi.fastutil.HashCommon;
 +

@@ -19,8 +19,8 @@ index 73bf34c3ce7e55e9fd15a3af90bf107e85d764b0..c767257b56acbe2cde391f405c010f5b
 -        int l = Mth.randomBetweenInclusive(world.random, world.getMinBuildHeight(), k);
 -
 -        return new BlockPos(i, l, j);
-+        // Leaves start - use thread unsafe random
-+        if (top.leavesmc.leaves.LeavesConfig.useMoreThreadUnsafeRandom) {
++        // Iron start - use thread unsafe random
++        if (top.Ironmc.Iron.IronConfig.useMoreThreadUnsafeRandom) {
 +            int i = chunkcoordintpair.getMinBlockX() + world.getThreadUnsafeRandom().nextInt(16);
 +            int j = chunkcoordintpair.getMinBlockZ() + world.getThreadUnsafeRandom().nextInt(16);
 +            int k = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, i, j) + 1;
@@ -33,7 +33,7 @@ index 73bf34c3ce7e55e9fd15a3af90bf107e85d764b0..c767257b56acbe2cde391f405c010f5b
 +            int l = Mth.randomBetweenInclusive(world.random, world.getMinBuildHeight(), k);
 +            return new BlockPos(i, l, j);
 +        }
-+        // Leaves end - use thread unsafe random
++        // Iron end - use thread unsafe random
      }
  
      public static boolean isValidEmptySpawnBlock(BlockGetter blockView, BlockPos pos, BlockState state, FluidState fluidState, EntityType<?> entityType) {

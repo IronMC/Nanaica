@@ -14,7 +14,7 @@ index ebee8de2ed831755b6fd154f6cc77ac993839bb9..1015b3c5f6969709bb8ebfbd66eb9ced
      @Nullable
      protected BlockState getPlacementState(BlockPlaceContext context) {
 -        BlockState iblockdata = this.getBlock().getStateForPlacement(context);
-+        BlockState iblockdata = this.getBlock().getRealStateForPlacement(context); // Leaves - carpetAlternativeBlockPlacement
++        BlockState iblockdata = this.getBlock().getRealStateForPlacement(context); // Iron - carpetAlternativeBlockPlacement
  
          return iblockdata != null && this.canPlace(context, iblockdata) ? iblockdata : null;
      }
@@ -27,7 +27,7 @@ index 39b8b3675ac58409e05fac07e07c8016c5280d81..928b1ece5b094dee8a5e37bfd3afd626
      @Override
      protected BlockState getPlacementState(BlockPlaceContext context) {
 -        BlockState iblockdata = this.wallBlock.getStateForPlacement(context);
-+        BlockState iblockdata = this.wallBlock.getRealStateForPlacement(context); // Leaves - carpetAlternativeBlockPlacement
++        BlockState iblockdata = this.wallBlock.getRealStateForPlacement(context); // Iron - carpetAlternativeBlockPlacement
          BlockState iblockdata1 = null;
          Level world = context.getLevel();
          BlockPos blockposition = context.getClickedPos();
@@ -36,7 +36,7 @@ index 39b8b3675ac58409e05fac07e07c8016c5280d81..928b1ece5b094dee8a5e37bfd3afd626
  
              if (enumdirection != this.attachmentDirection.getOpposite()) {
 -                BlockState iblockdata2 = enumdirection == this.attachmentDirection ? this.getBlock().getStateForPlacement(context) : iblockdata;
-+                BlockState iblockdata2 = enumdirection == this.attachmentDirection ? this.getBlock().getRealStateForPlacement(context) : iblockdata; // Leaves - carpetAlternativeBlockPlacement
++                BlockState iblockdata2 = enumdirection == this.attachmentDirection ? this.getBlock().getRealStateForPlacement(context) : iblockdata; // Iron - carpetAlternativeBlockPlacement
  
                  if (iblockdata2 != null && this.canPlace(world, iblockdata2, blockposition)) {
                      iblockdata1 = iblockdata2;
@@ -48,29 +48,29 @@ index 9522e646529f3d849471931b4b3c0d133e7fcfc5..5cf87860455ca05363685c192dc34a27
  
      public void stepOn(Level world, BlockPos pos, BlockState state, Entity entity) {}
  
-+    // Leaves start - carpetAlternativeBlockPlacement
++    // Iron start - carpetAlternativeBlockPlacement
 +    @Nullable
 +    public BlockState getRealStateForPlacement(BlockPlaceContext ctx) {
-+        if (top.leavesmc.leaves.LeavesConfig.carpetAlternativeBlockPlacement) {
-+            BlockState tryState = top.leavesmc.leaves.protocol.CarpetAlternativeBlockPlacement.alternativeBlockPlacement(this, ctx);
++        if (top.Ironmc.Iron.IronConfig.carpetAlternativeBlockPlacement) {
++            BlockState tryState = top.Ironmc.Iron.protocol.CarpetAlternativeBlockPlacement.alternativeBlockPlacement(this, ctx);
 +            if (tryState != null) {
 +                return tryState;
 +            }
 +        }
 +        return getStateForPlacement(ctx);
 +    }
-+    // Leaves end - carpetAlternativeBlockPlacement
++    // Iron end - carpetAlternativeBlockPlacement
 +
      @Nullable
      public BlockState getStateForPlacement(BlockPlaceContext ctx) {
          return this.defaultBlockState();
-diff --git a/src/main/java/top/leavesmc/leaves/protocol/CarpetAlternativeBlockPlacement.java b/src/main/java/top/leavesmc/leaves/protocol/CarpetAlternativeBlockPlacement.java
+diff --git a/src/main/java/top/Ironmc/Iron/protocol/CarpetAlternativeBlockPlacement.java b/src/main/java/top/Ironmc/Iron/protocol/CarpetAlternativeBlockPlacement.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..848c380ed3d9755bab680b1e244a6024110bc383
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/protocol/CarpetAlternativeBlockPlacement.java
++++ b/src/main/java/top/Ironmc/Iron/protocol/CarpetAlternativeBlockPlacement.java
 @@ -0,0 +1,101 @@
-+package top.leavesmc.leaves.protocol;
++package top.Ironmc.Iron.protocol;
 +
 +import net.minecraft.core.BlockPos;
 +import net.minecraft.core.Direction;

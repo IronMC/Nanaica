@@ -44,8 +44,8 @@ out/
 *~
 
 # other stuff
-leaves-server
-leaves-api
+iron-server
+iron
 mc-dev
 .idea
 testserver

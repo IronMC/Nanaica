@@ -14,7 +14,7 @@ index a26ec93b1914492606499f3ecbbac3a1836295d4..afecf33c1df964decad84636c4e58836
  
      public boolean updateFluidHeightAndDoFluidPushing(TagKey<Fluid> tag, double speed) {
 -        if (this.touchingUnloadedChunk()) {
-+        if (!top.leavesmc.leaves.LeavesConfig.reduceEntityFluidLookup && this.touchingUnloadedChunk()) { // Leaves - cost of a lookup here is the same cost as below, so skip
++        if (!top.Ironmc.Iron.IronConfig.reduceEntityFluidLookup && this.touchingUnloadedChunk()) { // Iron - cost of a lookup here is the same cost as below, so skip
              return false;
          } else {
              AABB axisalignedbb = this.getBoundingBox().deflate(0.001D);
@@ -24,14 +24,14 @@ index a26ec93b1914492606499f3ecbbac3a1836295d4..afecf33c1df964decad84636c4e58836
 -            int l = Mth.ceil(axisalignedbb.maxY);
 -            int i1 = Mth.floor(axisalignedbb.minZ);
 -            int j1 = Mth.ceil(axisalignedbb.maxZ);
-+            // Leaves start - rename
++            // Iron start - rename
 +            int minBlockX = Mth.floor(axisalignedbb.minX);
 +            int maxBlockX = Mth.ceil(axisalignedbb.maxX);
 +            int minBlockY = Mth.floor(axisalignedbb.minY);
 +            int maxBlockY = Mth.ceil(axisalignedbb.maxY);
 +            int minBlockZ = Mth.floor(axisalignedbb.minZ);
 +            int maxBlockZ = Mth.ceil(axisalignedbb.maxZ);
-+            // Leaves end
++            // Iron end
              double d1 = 0.0D;
              boolean flag = this.isPushedByFluid();
              boolean flag1 = false;
@@ -44,8 +44,8 @@ index a26ec93b1914492606499f3ecbbac3a1836295d4..afecf33c1df964decad84636c4e58836
 -                    for (int j2 = i1; j2 < j1; ++j2) {
 -                        blockposition_mutableblockposition.set(l1, i2, j2);
 -                        FluidState fluid = this.level().getFluidState(blockposition_mutableblockposition);
-+            // Leaves start - based off CollisionUtil.getCollisionsForBlocksOrWorldBorder
-+            if (top.leavesmc.leaves.LeavesConfig.reduceEntityFluidLookup) {
++            // Iron start - based off CollisionUtil.getCollisionsForBlocksOrWorldBorder
++            if (top.Ironmc.Iron.IronConfig.reduceEntityFluidLookup) {
 +                final int minSection = io.papermc.paper.util.WorldUtil.getMinSection(this.level);
 +                final int maxSection = io.papermc.paper.util.WorldUtil.getMaxSection(this.level);
 +                final int minBlock = minSection << 4;
@@ -176,7 +176,7 @@ index a26ec93b1914492606499f3ecbbac3a1836295d4..afecf33c1df964decad84636c4e58836
                      }
                  }
              }
-+            // Leaves end
++            // Iron end
  
              if (vec3d.length() > 0.0D) {
                  if (k1 > 0) {
@@ -188,7 +188,7 @@ index d4477b0dda6a1ef7bd8323c0d11b636bd071d18e..3b7fcf532761362d2f657f58962d7bd2
      public final PalettedContainer<BlockState> states;
      // CraftBukkit start - read/write
      private PalettedContainer<Holder<Biome>> biomes;
-+    public short fluidStateCount; // Leaves
++    public short fluidStateCount; // Iron
      public final com.destroystokyo.paper.util.maplist.IBlockDataList tickingList = new com.destroystokyo.paper.util.maplist.IBlockDataList(); // Paper
  
      public LevelChunkSection(PalettedContainer<BlockState> datapaletteblock, PalettedContainer<Holder<Biome>> palettedcontainerro) {
@@ -196,7 +196,7 @@ index d4477b0dda6a1ef7bd8323c0d11b636bd071d18e..3b7fcf532761362d2f657f58962d7bd2
  
          if (!fluid.isEmpty()) {
              --this.tickingFluidCount;
-+            --this.fluidStateCount; // Leaves
++            --this.fluidStateCount; // Iron
          }
  
          if (!state.isAir()) {
@@ -204,7 +204,7 @@ index d4477b0dda6a1ef7bd8323c0d11b636bd071d18e..3b7fcf532761362d2f657f58962d7bd2
  
          if (!fluid1.isEmpty()) {
              ++this.tickingFluidCount;
-+            --this.fluidStateCount; // Leaves
++            --this.fluidStateCount; // Iron
          }
  
          this.updateKnownBlockInfo(x | (z << 4) | (y << 8), iblockdata1, state); // Paper
@@ -212,7 +212,7 @@ index d4477b0dda6a1ef7bd8323c0d11b636bd071d18e..3b7fcf532761362d2f657f58962d7bd2
                  if (fluid.isRandomlyTicking()) {
                      this.tickingFluidCount = (short) (this.tickingFluidCount + 1);
                  }
-+                this.fluidStateCount++; // Leaves
++                this.fluidStateCount++; // Iron
              }
  
          });

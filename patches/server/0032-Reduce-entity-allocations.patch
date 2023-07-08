@@ -13,7 +13,7 @@ index e7a5e07deb24d6d9ad0b4aa92fc0bef3249d0845..914fa28793005c976a87e643325188f0
          return this.originWorld;
      }
      // Paper end
-+    // public final BlockPos.MutableBlockPos cachedBlockPos = new BlockPos.MutableBlockPos(); // Leaves - used where needed ?
++    // public final BlockPos.MutableBlockPos cachedBlockPos = new BlockPos.MutableBlockPos(); // Iron - used where needed ?
 +
      public float getBukkitYaw() {
          return this.yRot;
@@ -26,7 +26,7 @@ index dd1102d5291ef6f18e82400a6d8a0a376cc071e9..53c094c8a674b2842009727569e7e1f6
      private final Map<Attribute, AttributeInstance> attributes = Maps.newHashMap();
      private final Set<AttributeInstance> dirtyAttributes = Sets.newHashSet();
      private final AttributeSupplier supplier;
-+    private final java.util.function.Function<Attribute, AttributeInstance> createInstance; // Leaves - reduce entity allocations
++    private final java.util.function.Function<Attribute, AttributeInstance> createInstance; // Iron - reduce entity allocations
  
      public AttributeMap(AttributeSupplier defaultAttributes) {
          this.supplier = defaultAttributes;
@@ -41,15 +41,15 @@ index dd1102d5291ef6f18e82400a6d8a0a376cc071e9..53c094c8a674b2842009727569e7e1f6
 -        return this.attributes.computeIfAbsent(attribute, (attributex) -> {
 -            return this.supplier.createInstance(this::onAttributeModified, attributex);
 -        });
-+        // Leaves start - cache lambda, as for some reason java allocates it anyways
-+        if (top.leavesmc.leaves.LeavesConfig.reduceEntityAllocations) {
++        // Iron start - cache lambda, as for some reason java allocates it anyways
++        if (top.Ironmc.Iron.IronConfig.reduceEntityAllocations) {
 +            return this.attributes.computeIfAbsent(attribute, this.createInstance);
 +        } else {
 +            return this.attributes.computeIfAbsent(attribute, (attributex) -> {
 +                return this.supplier.createInstance(this::onAttributeModified, attributex);
 +            });
 +        }
-+        // Leaves end - cache lambda, as for some reason java allocates it anyways
++        // Iron end - cache lambda, as for some reason java allocates it anyways
      }
  
      @Nullable

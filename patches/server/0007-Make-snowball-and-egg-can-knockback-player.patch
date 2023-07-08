@@ -20,12 +20,12 @@ index 718e120c9768cf716b32d3d652f53f1dda925168..21f5c59e7e01ffefdb077d1aa9853935
          Entity entity = entityHitResult.getEntity();
          int i = entity instanceof Blaze ? 3 : 0;
          entity.hurt(this.damageSources().thrown(this, this.getOwner()), (float)i);
-+        // Leaves start - make snowball can knockback player
-+        if (top.leavesmc.leaves.LeavesConfig.snowballAndEggCanKnockback && entity instanceof ServerPlayer) {
++        // Iron start - make snowball can knockback player
++        if (top.Ironmc.Iron.IronConfig.snowballAndEggCanKnockback && entity instanceof ServerPlayer) {
 +            entity.hurt(this.damageSources().thrown(this, this.getOwner()), 0.0000001F);
 +            ((ServerPlayer) entity).knockback(0.4000000059604645D, this.getX() - entity.getX(), this.getZ() - entity.getZ(), this);
 +        }
-+        // Leaves end - make snowball can knockback player
++        // Iron end - make snowball can knockback player
      }
  
      @Override
@@ -37,14 +37,14 @@ index 6fd803f831cab088a67062ce8624b30338771d8e..b3835e66a395cb25e0d11876c87fb83f
      @Override
      protected void onHitEntity(EntityHitResult entityHitResult) {
          super.onHitEntity(entityHitResult);
-+        Entity entity = entityHitResult.getEntity(); // Leaves - make egg can knockback player
++        Entity entity = entityHitResult.getEntity(); // Iron - make egg can knockback player
          entityHitResult.getEntity().hurt(this.damageSources().thrown(this, this.getOwner()), 0.0F);
-+        // Leaves start - make egg can knockback player
-+        if (top.leavesmc.leaves.LeavesConfig.snowballAndEggCanKnockback && entity instanceof ServerPlayer) {
++        // Iron start - make egg can knockback player
++        if (top.Ironmc.Iron.IronConfig.snowballAndEggCanKnockback && entity instanceof ServerPlayer) {
 +            entity.hurt(this.damageSources().thrown(this, this.getOwner()), 0.0000001F);
 +            ((ServerPlayer) entity).knockback(0.4000000059604645D, this.getX() - entity.getX(), this.getZ() - entity.getZ(), this);
 +        }
-+        // Leaves end - make egg can knockback player
++        // Iron end - make egg can knockback player
      }
  
      @Override

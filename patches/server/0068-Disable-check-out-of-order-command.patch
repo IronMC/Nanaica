@@ -13,7 +13,7 @@ index 4e9ff7a4f2c2283b1f299ad4c23323725ca9a800..9ad3dbb4b376b04ddc9729bf46185d9a
  
      private Optional<LastSeenMessages> tryHandleChat(String message, Instant timestamp, LastSeenMessages.Update acknowledgment) {
 -        if (!this.updateChatOrder(timestamp)) {
-+        if (!top.leavesmc.leaves.LeavesConfig.disableCheckOutOfOrderCommand && !this.updateChatOrder(timestamp)) { // Leaves - disable check to support Velocity
++        if (!top.Ironmc.Iron.IronConfig.disableCheckOutOfOrderCommand && !this.updateChatOrder(timestamp)) { // Iron - disable check to support Velocity
              ServerGamePacketListenerImpl.LOGGER.warn("{} sent out-of-order chat: '{}': {} > {}", this.player.getName().getString(), message, this.lastChatTimeStamp.get().getEpochSecond(), timestamp.getEpochSecond()); // Paper
              this.server.scheduleOnMain(() -> { // Paper - push to main
              this.disconnect(Component.translatable("multiplayer.disconnect.out_of_order_chat"), org.bukkit.event.player.PlayerKickEvent.Cause.OUT_OF_ORDER_CHAT); // Paper - kick event ca

@@ -13,11 +13,11 @@ index 307d4fd4b52aa654f859aab34126048b6a127dde..755f0d3631b733799d2cb07a22b0bed8
      }
  
      public ProfilerFiller getProfiler() {
-+        // Leaves start - disable method profiler
-+        if (top.leavesmc.leaves.LeavesConfig.disableMethodProfiler) {
++        // Iron start - disable method profiler
++        if (top.Ironmc.Iron.IronConfig.disableMethodProfiler) {
 +            return net.minecraft.util.profiling.InactiveProfiler.INSTANCE;
 +        }
-+        // Leaves end - disable method profiler
++        // Iron end - disable method profiler
          return this.profiler;
      }
  
@@ -29,11 +29,11 @@ index 11d362ce8043966a7fce6c64849b7c080133fcbd..71836aa0e2f5d397c0b02c9662d1b114
      }
  
      public ProfilerFiller getProfiler() {
-+        // Leaves start - disable method profiler
-+        if (top.leavesmc.leaves.LeavesConfig.disableMethodProfiler) {
++        // Iron start - disable method profiler
++        if (top.Ironmc.Iron.IronConfig.disableMethodProfiler) {
 +            return net.minecraft.util.profiling.InactiveProfiler.INSTANCE;
 +        }
-+        // Leaves end - disable method profiler
++        // Iron end - disable method profiler
          return (ProfilerFiller) this.profiler.get();
      }
  

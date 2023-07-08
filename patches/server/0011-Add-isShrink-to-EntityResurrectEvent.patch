@@ -13,13 +13,13 @@ index e11d7283662834047b2ff81a2fd25a4263792deb..d7861680dc319c22fa257e91b4ddc0ca
  
              org.bukkit.inventory.EquipmentSlot handSlot = (hand != null) ? org.bukkit.craftbukkit.CraftEquipmentSlot.getHand(hand) : null;
 -            EntityResurrectEvent event = new EntityResurrectEvent((org.bukkit.entity.LivingEntity) this.getBukkitEntity(), handSlot);
-+            EntityResurrectEvent event = new EntityResurrectEvent((org.bukkit.entity.LivingEntity) this.getBukkitEntity(), handSlot, true); // Leaves - can dont shrink
++            EntityResurrectEvent event = new EntityResurrectEvent((org.bukkit.entity.LivingEntity) this.getBukkitEntity(), handSlot, true); // Iron - can dont shrink
              event.setCancelled(itemstack == null);
              this.level().getCraftServer().getPluginManager().callEvent(event);
  
              if (!event.isCancelled()) {
 -                if (!itemstack1.isEmpty() && itemstack != null) { // Paper - only reduce item if actual totem was found
-+                if (!itemstack1.isEmpty() && itemstack != null && event.isShrink()) { // Paper - only reduce item if actual totem was found // Leaves - can dont shrink
++                if (!itemstack1.isEmpty() && itemstack != null && event.isShrink()) { // Paper - only reduce item if actual totem was found // Iron - can dont shrink
                      itemstack1.shrink(1);
                  }
                  if (itemstack != null && this instanceof ServerPlayer) {

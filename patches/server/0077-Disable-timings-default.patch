@@ -14,8 +14,8 @@ index 4ac3fa45cd155ae8a852e26d4d4d1f16b28efdc2..cacd808f1d03c9729bcf2110bffceb94
      public class Timings extends ConfigurationPart.Post {
 -        public boolean enabled = true;
 -        public boolean verbose = true;
-+        public boolean enabled = false; // Leaves - def false
-+        public boolean verbose = false; // Leaves - def false
++        public boolean enabled = false; // Iron - def false
++        public boolean verbose = false; // Iron - def false
          public String url = "https://timings.aikar.co/";
          public boolean serverNamePrivacy = false;
          public List<String> hiddenConfigEntries = List.of(

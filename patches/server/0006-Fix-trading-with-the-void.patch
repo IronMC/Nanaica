@@ -17,7 +17,7 @@ index 18aac3da3c88f33b1a71a5920a8daa27e9723913..05e7c0986f1959ec16a6f81cf905744a
 -                    merchant.getTrader().closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.UNLOADED);
 -                }
 -                // Paper end
-+                // Leaves - fix trading with the void
++                // Iron - fix trading with the void
                  for (org.bukkit.entity.HumanEntity h : Lists.newArrayList(((org.bukkit.inventory.InventoryHolder) entity.getBukkitEntity()).getInventory().getViewers())) {
                      h.closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.UNLOADED); // Paper
                  }

@@ -13,7 +13,7 @@ index 914fa28793005c976a87e643325188f0e89f8b42..93fd2397d977b30b56820fff71c01ac1
          this.isLegacyTrackingEntity = isLegacyTrackingEntity;
      }
  
-+    // Leaves start - better metond
++    // Iron start - better metond
 +    private org.spigotmc.TrackingRange.TrackingRangeType getFurthestEntity(Entity entity, net.minecraft.server.level.ChunkMap chunkMap, org.spigotmc.TrackingRange.TrackingRangeType type, int range) {
 +        List<Entity> passengers = entity.getPassengers();
 +        for (int i = 0, size = passengers.size(); i < size; i++) {
@@ -30,7 +30,7 @@ index 914fa28793005c976a87e643325188f0e89f8b42..93fd2397d977b30b56820fff71c01ac1
 +
 +        return type;
 +    }
-+    // Leaves end - better metond
++    // Iron end - better metond
 +
      public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> getPlayersInTrackRange() {
          // determine highest range of passengers
@@ -39,7 +39,7 @@ index 914fa28793005c976a87e643325188f0e89f8b42..93fd2397d977b30b56820fff71c01ac1
                  .getObjectsInRange(MCUtil.getCoordinateKey(this));
          }
 -        Iterable<Entity> passengers = this.getIndirectPassengers();
-+        // Leaves start - use getFurthestEntity to skip getIndirectPassengers
++        // Iron start - use getFurthestEntity to skip getIndirectPassengers
          net.minecraft.server.level.ChunkMap chunkMap = ((ServerLevel)this.level).getChunkSource().chunkMap;
          org.spigotmc.TrackingRange.TrackingRangeType type = this.trackingRangeType;
          int range = chunkMap.getEntityTrackerRange(type.ordinal());
@@ -50,7 +50,7 @@ index 914fa28793005c976a87e643325188f0e89f8b42..93fd2397d977b30b56820fff71c01ac1
 -            if (passengerRange > range) {
 -                type = passengerType;
 -                range = passengerRange;
-+        if (top.leavesmc.leaves.LeavesConfig.removeGetNearPlayerStreams) {
++        if (top.Ironmc.Iron.IronConfig.removeGetNearPlayerStreams) {
 +            type = this.getFurthestEntity(this, chunkMap, type, range);
 +        } else {
 +            Iterable<Entity> passengers = this.getIndirectPassengers();
@@ -63,7 +63,7 @@ index 914fa28793005c976a87e643325188f0e89f8b42..93fd2397d977b30b56820fff71c01ac1
 +                }
              }
          }
-+        // Leaves end - use getFurthestEntity to skip getIndirectPassengers
++        // Iron end - use getFurthestEntity to skip getIndirectPassengers
  
          return chunkMap.playerEntityTrackerTrackMaps[type.ordinal()].getObjectsInRange(MCUtil.getCoordinateKey(this));
      }

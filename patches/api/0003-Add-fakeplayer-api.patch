@@ -4,13 +4,13 @@ Date: Wed, 27 Jul 2022 15:30:34 +0800
 Subject: [PATCH] Add fakeplayer api
 
 
-diff --git a/src/main/java/top/leavesmc/leaves/entity/Bot.java b/src/main/java/top/leavesmc/leaves/entity/Bot.java
+diff --git a/src/main/java/top/ironmc/iron/entity/Bot.java b/src/main/java/top/ironmc/iron/entity/Bot.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..8057d1faa66540b8c4042a0f5c0f862e8a39eef1
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/entity/Bot.java
++++ b/src/main/java/top/ironmc/iron/entity/Bot.java
 @@ -0,0 +1,27 @@
-+package top.leavesmc.leaves.entity;
++package top.ironmc.iron.entity;
 +
 +import org.bukkit.entity.Player;
 +import org.jetbrains.annotations.NotNull;
@@ -37,13 +37,13 @@ index 0000000000000000000000000000000000000000..8057d1faa66540b8c4042a0f5c0f862e
 +    @NotNull
 +    public String getRealName();
 +}
-diff --git a/src/main/java/top/leavesmc/leaves/event/bot/BotCreateEvent.java b/src/main/java/top/leavesmc/leaves/event/bot/BotCreateEvent.java
+diff --git a/src/main/java/top/ironmc/iron/event/bot/BotCreateEvent.java b/src/main/java/top/ironmc/iron/event/bot/BotCreateEvent.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..7cf1eb4eb3d2fe9310f9272ec53208632b87b49b
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/event/bot/BotCreateEvent.java
++++ b/src/main/java/top/ironmc/iron/event/bot/BotCreateEvent.java
 @@ -0,0 +1,106 @@
-+package top.leavesmc.leaves.event.bot;
++package top.ironmc.iron.event.bot;
 +
 +import org.bukkit.Location;
 +import org.bukkit.event.Cancellable;
@@ -149,17 +149,17 @@ index 0000000000000000000000000000000000000000..7cf1eb4eb3d2fe9310f9272ec5320863
 +        return handlers;
 +    }
 +}
-diff --git a/src/main/java/top/leavesmc/leaves/event/bot/BotEvent.java b/src/main/java/top/leavesmc/leaves/event/bot/BotEvent.java
+diff --git a/src/main/java/top/ironmc/iron/event/bot/BotEvent.java b/src/main/java/top/ironmc/iron/event/bot/BotEvent.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..4a4fe07ce965d4a97e0d8105a91310dac7d1343c
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/event/bot/BotEvent.java
++++ b/src/main/java/top/ironmc/iron/event/bot/BotEvent.java
 @@ -0,0 +1,31 @@
-+package top.leavesmc.leaves.event.bot;
++package top.ironmc.iron.event.bot;
 +
 +import org.bukkit.event.Event;
 +import org.jetbrains.annotations.NotNull;
-+import top.leavesmc.leaves.entity.Bot;
++import top.ironmc.iron.entity.Bot;
 +
 +/**
 + * Represents a fakeplayer related event
@@ -186,17 +186,17 @@ index 0000000000000000000000000000000000000000..4a4fe07ce965d4a97e0d8105a91310da
 +        return bot;
 +    }
 +}
-diff --git a/src/main/java/top/leavesmc/leaves/event/bot/BotJoinEvent.java b/src/main/java/top/leavesmc/leaves/event/bot/BotJoinEvent.java
+diff --git a/src/main/java/top/ironmc/iron/event/bot/BotJoinEvent.java b/src/main/java/top/ironmc/iron/event/bot/BotJoinEvent.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..10afa5c7fd4ee8a4e72d64f8ca9bf8731ec2ad61
 --- /dev/null
-+++ b/src/main/java/top/leavesmc/leaves/event/bot/BotJoinEvent.java
++++ b/src/main/java/top/ironmc/iron/event/bot/BotJoinEvent.java
 @@ -0,0 +1,27 @@
-+package top.leavesmc.leaves.event.bot;
++package top.ironmc.iron.event.bot;
 +
 +import org.bukkit.event.HandlerList;
 +import org.jetbrains.annotations.NotNull;
-+import top.leavesmc.leaves.entity.Bot;
++import top.ironmc.iron.entity.Bot;
 +
 +/**
 + * Called when a fakeplayer joins a server

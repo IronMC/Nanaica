@@ -13,7 +13,7 @@ index 246afa286ae66788c45b6c58108ff200bbb92f6b..0d0479be19afd82a876b8a4a5eda86d7
                  this.setServerLevel(worldserver);
                  this.connection.teleport(exit); // CraftBukkit - use internal teleport without event
                  this.connection.resetPosition();
-+                if (top.leavesmc.leaves.LeavesConfig.fixPaper9372) this.mainSupportingBlockPos = Optional.empty(); // Leaves - fix paper 9372
++                if (top.Ironmc.Iron.IronConfig.fixPaper9372) this.mainSupportingBlockPos = Optional.empty(); // Iron - fix paper 9372
                  worldserver.addDuringPortalTeleport(this);
                  worldserver1.getProfiler().pop();
                  this.triggerDimensionChangeTriggers(worldserver1);
@@ -21,7 +21,7 @@ index 246afa286ae66788c45b6c58108ff200bbb92f6b..0d0479be19afd82a876b8a4a5eda86d7
      public void moveTo(double x, double y, double z) {
          super.moveTo(x, y, z);
          this.connection.resetPosition();
-+        if (top.leavesmc.leaves.LeavesConfig.fixPaper9372) this.mainSupportingBlockPos = Optional.empty(); // Leaves - fix paper 9372
++        if (top.Ironmc.Iron.IronConfig.fixPaper9372) this.mainSupportingBlockPos = Optional.empty(); // Iron - fix paper 9372
      }
  
      @Override
@@ -29,7 +29,7 @@ index 246afa286ae66788c45b6c58108ff200bbb92f6b..0d0479be19afd82a876b8a4a5eda86d7
  
              this.connection.send(new ClientboundSetCameraPacket(this.camera));
              this.connection.resetPosition();
-+            if (top.leavesmc.leaves.LeavesConfig.fixPaper9372) this.mainSupportingBlockPos = Optional.empty(); // Leaves - fix paper 9372
++            if (top.Ironmc.Iron.IronConfig.fixPaper9372) this.mainSupportingBlockPos = Optional.empty(); // Iron - fix paper 9372
          }
      }
  
@@ -37,7 +37,7 @@ index 246afa286ae66788c45b6c58108ff200bbb92f6b..0d0479be19afd82a876b8a4a5eda86d7
      public void forceSetPositionRotation(double x, double y, double z, float yaw, float pitch) {
          this.moveTo(x, y, z, yaw, pitch);
          this.connection.resetPosition();
-+        if (top.leavesmc.leaves.LeavesConfig.fixPaper9372) this.mainSupportingBlockPos = Optional.empty(); // Leaves - fix paper 9372
++        if (top.Ironmc.Iron.IronConfig.fixPaper9372) this.mainSupportingBlockPos = Optional.empty(); // Iron - fix paper 9372
      }
  
      @Override

@@ -13,11 +13,11 @@ index d4c91e0a0c64fcb7f1145de3f30134cb1f1f8ee6..44fc394dbab7e05a3bd7cab493300a96
                          return false;
                      } else {
                          mutableLong.setValue(time + 20L + (long)world.getRandom().nextInt(20));
-+                        // Leaves start - wait an additional 10s to check again if they're stuck
-+                        if (top.leavesmc.leaves.LeavesConfig.skipPOIFindingInVehicle && entity.getNavigation().isStuck())  {
++                        // Iron start - wait an additional 10s to check again if they're stuck
++                        if (top.Ironmc.Iron.IronConfig.skipPOIFindingInVehicle && entity.getNavigation().isStuck())  {
 +                            mutableLong.add(200L);
 +                        }
-+                        // Leaves end - wait an additional 10s to check again if they're stuck
++                        // Iron end - wait an additional 10s to check again if they're stuck
                          PoiManager poiManager = world.getPoiManager();
                          long2ObjectMap.long2ObjectEntrySet().removeIf((entry) -> {
                              return !entry.getValue().isStillValid(time);

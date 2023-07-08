@@ -14,8 +14,8 @@ index 58152160d609d0e9d105153aeb166a56a7955603..352ef747063f9cb1a26bf906f8cb5235
      public void tick() {
 -        this.noPhysics = this.isSpectator();
 -        if (this.isSpectator()) {
-+        this.noPhysics = this.isCreativeFlyOrSpectator(); // Leaves - creative no clip
-+        if (this.isCreativeFlyOrSpectator()) { // Leaves - creative no clip
++        this.noPhysics = this.isCreativeFlyOrSpectator(); // Iron - creative no clip
++        if (this.isCreativeFlyOrSpectator()) { // Iron - creative no clip
              this.setOnGround(false);
          }
  
@@ -24,7 +24,7 @@ index 58152160d609d0e9d105153aeb166a56a7955603..352ef747063f9cb1a26bf906f8cb5235
              Pose entitypose1;
  
 -            if (!this.isSpectator() && !this.isPassenger() && !this.canEnterPose(entitypose)) {
-+            if (!this.isCreativeFlyOrSpectator() && !this.isPassenger() && !this.canEnterPose(entitypose)) { // Leaves - creative no clip
++            if (!this.isCreativeFlyOrSpectator() && !this.isPassenger() && !this.canEnterPose(entitypose)) { // Iron - creative no clip
                  if (this.canEnterPose(Pose.CROUCHING)) {
                      entitypose1 = Pose.CROUCHING;
                  } else {
@@ -33,7 +33,7 @@ index 58152160d609d0e9d105153aeb166a56a7955603..352ef747063f9cb1a26bf906f8cb5235
  
          this.bob += (f - this.bob) * 0.4F;
 -        if (this.getHealth() > 0.0F && !this.isSpectator()) {
-+        if (this.getHealth() > 0.0F && !this.isCreativeFlyOrSpectator()) { // Leaves - creative no clip
++        if (this.getHealth() > 0.0F && !this.isCreativeFlyOrSpectator()) { // Iron - creative no clip
              AABB axisalignedbb;
  
              if (this.isPassenger() && !this.getVehicle().isRemoved()) {
@@ -41,11 +41,11 @@ index 58152160d609d0e9d105153aeb166a56a7955603..352ef747063f9cb1a26bf906f8cb5235
      @Override
      public abstract boolean isSpectator();
  
-+    // Leaves start - creative no clip
++    // Iron start - creative no clip
 +    public boolean isCreativeFlyOrSpectator() {
-+        return isSpectator() || (top.leavesmc.leaves.LeavesConfig.creativeNoClip && isCreative() && getAbilities().flying);
++        return isSpectator() || (top.Ironmc.Iron.IronConfig.creativeNoClip && isCreative() && getAbilities().flying);
 +    }
-+    // Leaves end - creative no clip
++    // Iron end - creative no clip
 +
      @Override
      public boolean canBeHitByProjectile() {
@@ -59,7 +59,7 @@ index 25a9c38c60d183bb65b14f4d7550ab98b431c218..118a5b4c0a5268d52c69b0cfd061dbcc
                      Entity entity = (Entity) list.get(i);
  
 -                    if (entity.getPistonPushReaction() != PushReaction.IGNORE) {
-+                    if (entity.getPistonPushReaction() != PushReaction.IGNORE  && !(entity instanceof Player player && player.isCreativeFlyOrSpectator())) { // Leaves - creative no clip
++                    if (entity.getPistonPushReaction() != PushReaction.IGNORE  && !(entity instanceof Player player && player.isCreativeFlyOrSpectator())) { // Iron - creative no clip
                          entity.move(MoverType.SHULKER_BOX, new Vec3((axisalignedbb.getXsize() + 0.01D) * (double) enumdirection.getStepX(), (axisalignedbb.getYsize() + 0.01D) * (double) enumdirection.getStepY(), (axisalignedbb.getZsize() + 0.01D) * (double) enumdirection.getStepZ()));
                      }
                  }
@@ -80,15 +80,15 @@ index d9baa85962236c42219cf09d4f3129be93ff069c..c1bd06fbc2c5683888f7264c35c25feb
  
      public static boolean canEntityTeleport(Entity entity) {
 -        return EntitySelector.NO_SPECTATORS.test(entity) && !entity.getRootVehicle().isOnPortalCooldown();
-+        return EntitySelector.NO_SPECTATORS.test(entity) && !entity.getRootVehicle().isOnPortalCooldown() && !(entity instanceof Player player && player.isCreativeFlyOrSpectator()); // Leaves - creative no clip
++        return EntitySelector.NO_SPECTATORS.test(entity) && !entity.getRootVehicle().isOnPortalCooldown() && !(entity instanceof Player player && player.isCreativeFlyOrSpectator()); // Iron - creative no clip
      }
  
      public boolean isSpawning() {
-diff --git a/src/main/java/top/leavesmc/leaves/LeavesConfig.java b/src/main/java/top/leavesmc/leaves/LeavesConfig.java
+diff --git a/src/main/java/top/Ironmc/Iron/IronConfig.java b/src/main/java/top/Ironmc/Iron/IronConfig.java
 index c69a2efafd31b2367cc9f20652585a801eecea0c..9badc03ac95064824a8dc3e8fbc74b88d6939d2e 100644
---- a/src/main/java/top/leavesmc/leaves/LeavesConfig.java
-+++ b/src/main/java/top/leavesmc/leaves/LeavesConfig.java
-@@ -594,6 +594,7 @@ public final class LeavesConfig {
+--- a/src/main/java/top/Ironmc/Iron/IronConfig.java
++++ b/src/main/java/top/Ironmc/Iron/IronConfig.java
+@@ -594,6 +594,7 @@ public final class IronConfig {
      }
  
      public static void registerCarpetRules() {

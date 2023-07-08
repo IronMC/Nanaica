@@ -13,9 +13,9 @@ index 58422f00c7d64dbd1cf6d7211c9838875cbe7778..b39072cf38795e8f0d73f83b10d29fe1
                  }
  
                  if (this.range > 0.0D) {
-+                    // Leaves start - check range before getting visibility
++                    // Iron start - check range before getting visibility
 +                    double f = baseEntity.distanceToSqr(targetEntity.getX(), targetEntity.getY(), targetEntity.getZ());
-+                    if (top.leavesmc.leaves.LeavesConfig.entityTargetFindingOptimization) {
++                    if (top.Ironmc.Iron.IronConfig.entityTargetFindingOptimization) {
 +                        double followRangeRaw = this.useFollowRange ? this.getFollowRange(baseEntity) : this.range;
 +                        if (f > followRangeRaw * followRangeRaw) { // the actual follow range will always be this value or smaller, so if the distance is larger then it never will return true after getting invis
 +                            return false;
@@ -24,7 +24,7 @@ index 58422f00c7d64dbd1cf6d7211c9838875cbe7778..b39072cf38795e8f0d73f83b10d29fe1
                      double d = this.testInvisible ? targetEntity.getVisibilityPercent(baseEntity) : 1.0D;
                      double e = Math.max((this.useFollowRange ? this.getFollowRange(baseEntity) : this.range) * d, 2.0D); // Paper
 -                    double f = baseEntity.distanceToSqr(targetEntity.getX(), targetEntity.getY(), targetEntity.getZ());
-+                    // Leaves end - check range before getting visibility
++                    // Iron end - check range before getting visibility
                      if (f > e * e) {
                          return false;
                      }

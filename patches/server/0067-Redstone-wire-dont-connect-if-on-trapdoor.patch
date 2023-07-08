@@ -13,7 +13,7 @@ index 70544dac18381ab3fa8ddfa7d276a4ef03f9b191..57fbbc2b6293c3b81aad8a263139e553
  
          if (flag) {
 -            boolean flag1 = iblockdata.getBlock() instanceof TrapDoorBlock || this.canSurviveOn(world, blockposition1, iblockdata);
-+            boolean flag1 = (!top.leavesmc.leaves.LeavesConfig.redstoneDontCantOnTrapDoor && iblockdata.getBlock() instanceof TrapDoorBlock) || this.canSurviveOn(world, blockposition1, iblockdata); // Leaves - behavior to 1.19
++            boolean flag1 = (!top.Ironmc.Iron.IronConfig.redstoneDontCantOnTrapDoor && iblockdata.getBlock() instanceof TrapDoorBlock) || this.canSurviveOn(world, blockposition1, iblockdata); // Iron - behavior to 1.19
  
              if (flag1 && RedStoneWireBlock.shouldConnectTo(world.getBlockState(blockposition1.above()))) {
                  if (iblockdata.isFaceSturdy(world, blockposition1, direction.getOpposite())) {

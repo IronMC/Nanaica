@@ -13,7 +13,7 @@ index 004dce26ff073f1de52a84cd425c4f60fdab5e50..22d42186973e8f0bf664c5fae261c40a
  
                  flag5 |= flag6 && flag7;
 -                if (k != i || !tripWireBeingRemoved || !flag6) // Paper - don't update the tripwire again if being removed and not disarmed
-+                if (k != i || true || !flag6) // Paper - don't update the tripwire again if being removed and not disarmed // Leaves - no! always update it
++                if (k != i || true || !flag6) // Paper - don't update the tripwire again if being removed and not disarmed // Iron - no! always update it
                  aiblockdata[k] = iblockdata2;
                  if (k == i) {
                      world.scheduleTick(pos, (Block) this, 10);

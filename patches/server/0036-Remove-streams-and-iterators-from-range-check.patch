@@ -13,7 +13,7 @@ index 9209b598d7168b82574e4800056b8b9f84265dd0..e122a633bc3e26f7a98149f66da8a9e8
              return ChunkMap.this.level.getServer().getScaledTrackingDistance(initialDistance);
          }
  
-+        // Leaves start
++        // Iron start
 +        private static int getHighestRange(Entity parent, int highest) {
 +            List<Entity> passengers = parent.getPassengers();
 +
@@ -31,13 +31,13 @@ index 9209b598d7168b82574e4800056b8b9f84265dd0..e122a633bc3e26f7a98149f66da8a9e8
 +
 +            return highest;
 +        }
-+        // Leaves end
++        // Iron end
 +
          private int getEffectiveRange() {
              int i = this.range;
 -            Iterator iterator = this.entity.getIndirectPassengers().iterator();
-+            // Leaves start - remove iterators and streams
-+            if (top.leavesmc.leaves.LeavesConfig.removeRangeCheckStreams) {
++            // Iron start - remove iterators and streams
++            if (top.Ironmc.Iron.IronConfig.removeRangeCheckStreams) {
 +                i = getHighestRange(this.entity, i);
 +            } else {
 +                Iterator iterator = this.entity.getIndirectPassengers().iterator();
@@ -58,7 +58,7 @@ index 9209b598d7168b82574e4800056b8b9f84265dd0..e122a633bc3e26f7a98149f66da8a9e8
 +                    }
                  }
              }
-+            // Leaves end - remove iterators and streams
++            // Iron end - remove iterators and streams
  
              return this.scaledRange(i);
          }

@@ -12,11 +12,11 @@ index 8a8b9e8983be1acad66ad875c901be5bbdeabb1f..89f3466212800b5fac8a57d70fbc5a30
                          return InteractionResult.SUCCESS;
                      }
                  } else {
-+                    // Leaves start - stick can change ArmorStand arm status
-+                    if (top.leavesmc.leaves.LeavesConfig.stickChangeArmorStandArmStatus && itemstack.is(Items.STICK) && player.isShiftKeyDown()) {
++                    // Iron start - stick can change ArmorStand arm status
++                    if (top.Ironmc.Iron.IronConfig.stickChangeArmorStandArmStatus && itemstack.is(Items.STICK) && player.isShiftKeyDown()) {
 +                        setShowArms(!isShowArms());
 +                    }
-+                    // Leaves end - stick can change ArmorStand arm status
++                    // Iron end - stick can change ArmorStand arm status
 +
                      if (this.isDisabled(enumitemslot)) {
                          return InteractionResult.FAIL;

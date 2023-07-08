@@ -14,14 +14,14 @@ index ff1ad1024419182f7f3de578442c1c033d4c9ebb..d93f3eeea17d58ccc01c6010b2d49f81
  
      default double triangle(double mode, double deviation) {
 -        return mode + deviation * (this.nextDouble() - this.nextDouble());
-+        // Leaves start - flattenTriangularDistribution
-+        if (top.leavesmc.leaves.LeavesConfig.flattenTriangularDistribution) {
++        // Iron start - flattenTriangularDistribution
++        if (top.Ironmc.Iron.IronConfig.flattenTriangularDistribution) {
 +            this.nextDouble();
 +            return mode + deviation * (-1 + this.nextDouble() * 2);
 +        } else {
 +            return mode + deviation * (this.nextDouble() - this.nextDouble());
 +        }
-+        // Leaves end - flattenTriangularDistribution
++        // Iron end - flattenTriangularDistribution
      }
  
      default void consumeCount(int count) {

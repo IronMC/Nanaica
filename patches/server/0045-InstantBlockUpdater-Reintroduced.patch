@@ -22,13 +22,13 @@ index 71836aa0e2f5d397c0b02c9662d1b11454c0388b..8051a228854044d77d118c87163d7501
          this.biomeManager = new BiomeManager(this, i);
          this.isDebug = flag1;
 -        this.neighborUpdater = new CollectingNeighborUpdater(this, j);
-+        // Leaves start - instantBlockUpdaterReintroduced
-+        if (top.leavesmc.leaves.LeavesConfig.instantBlockUpdaterReintroduced) {
++        // Iron start - instantBlockUpdaterReintroduced
++        if (top.Ironmc.Iron.IronConfig.instantBlockUpdaterReintroduced) {
 +            this.neighborUpdater = new InstantNeighborUpdater(this);
 +        } else {
 +            this.neighborUpdater = new CollectingNeighborUpdater(this, j);
 +        }
-+        // Leaves end - instantBlockUpdaterReintroduced
++        // Iron end - instantBlockUpdaterReintroduced
          this.registryAccess = iregistrycustom;
          this.damageSources = new DamageSources(iregistrycustom);
          // CraftBukkit start
