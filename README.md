@@ -4,7 +4,6 @@ iron
 [![iron CI](https://github.com/ironMC/iron/actions/workflows/iron.yml/badge.svg)](https://github.com/ironMC/iron/actions/workflows/iron.yml)
 [![irond](https://img.shields.io/github/downloads/ironMC/iron/total?color=0&logo=github)](https://github.com/ironMC/iron/releases/latest)
 [![Discord](https://badgen.net/discord/online-members/qwThQDNTEv?icon=discord&label=Discord&list=what)](https://discord.gg/qwThQDNTEv)
-[![QQ](https://img.shields.io/badge/QQ-603461533-blue)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=YZCUmBIMQIoKIdoSohMN4nVI4SHuwwJC&authKey=0GotlXL9HYCYQk3oPARGPS920kJL8xQ3radhaAGj4A9z6OgSnKQRK5U6ManMrMuK&noverify=0&group_code=603461533)
 
 **English** | [中文](https://github.com/iron/iron/blob/master/README_cn.md)
 
