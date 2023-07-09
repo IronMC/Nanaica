@@ -5,7 +5,6 @@ iron
 [![irond](https://img.shields.io/github/downloads/ironMC/iron/total?color=0&logo=github)](https://github.com/ironMC/iron/releases/latest)
 [![Discord](https://badgen.net/discord/online-members/qwThQDNTEv?icon=discord&label=Discord&list=what)](https://discord.gg/qwThQDNTEv)
 
-**English** | [中文](https://github.com/iron/iron/blob/master/README_cn.md)
 
 > Fork of [Paper](https://github.com/PaperMC/Paper) aimed at repairing broken vanilla properties.
 
