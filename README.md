@@ -20,7 +20,7 @@ You can also [build it yourself](https://github.com/ironMC/iron#building).
 You can visit our [documentation](https://docs.iron.top/iron) for more information.
 
 ## How To (Plugin developers)
-In order to use iron as a dependency you must [build it yourself](https://github.com/ironMC/iron#building).
+In order to use iron as a dependency you must [build it yourself](https://github.com/IronMC/iron#building).
 Each time you want to update your dependency you must re-build iron.
 
 iron maven dependency:
