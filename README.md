@@ -13,7 +13,7 @@ iron
 ## How To (Server Admins)
 ironame paperclip jar system that Paper uses.
 
-You can download the latest build (1.20.x) of ironing [here](https://github.com/ironeaves/releases/latest)
+You can download the latest build (1.20.x) of ironing [here](https://github.com/IronMC/releases/latest)
 
 You can also [build it yourself](https://github.com/ironMC/iron#building).
 
