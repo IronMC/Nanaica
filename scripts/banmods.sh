@@ -2,8 +2,8 @@
 
 # List of mod ids to ban
 BANNED_MODS=(
-  "examplemod"
-  "anotherbadmod" 
+  "xaerosminimap"
+  "meteorclient" 
 )
 
 # Loop through connected players
