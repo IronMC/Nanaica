@@ -1,0 +1,383 @@
+From Pancakse Thur Aug 17 00:00:00 2023
+From: pancakse <pancakseyt@gmail.com>
+Date: Thur, 17 Aug 2023 09:32:53 +1000
+Subject: [PATCH] Nanaica Configuration
+
+Provides the basic infrastructure to load and save the Nanaica configuration file, nanaica.yml
+
+diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+index e59110d36..9576ac188 100644
+--- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+@@ -178,6 +178,11 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+             this.setPreventProxyConnections(dedicatedserverproperties.preventProxyConnections);
+             this.setLocalIp(dedicatedserverproperties.serverIp);
+         }
++        // Nanaica start
++        this.setPlayerList(new DedicatedPlayerList(this, this.registries(), this.playerDataStorage));
++        org.nanaica.NanaicaConfig.init((java.io.File) options.valueOf("nanaica-settings"));
++        org.nanaica.NanaicaConfig.registerCommands();
++        // Nanaica end
+ 
+         this.setPvpAllowed(dedicatedserverproperties.pvp);
+         this.setFlightAllowed(dedicatedserverproperties.allowFlight);
+@@ -209,7 +214,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+         }
+ 
+         // CraftBukkit start
+-        this.setPlayerList(new DedicatedPlayerList(this, this.registries(), this.playerDataStorage));
++        // this.setPlayerList(new DedicatedPlayerList(this, this.registries(), this.playerDataStorage)); // Nanaica - moved up
+         server.loadPlugins();
+         server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
+         // CraftBukkit end
+diff --git a/src/main/java/net/minecraft/world/level/World.java b/src/main/java/net/minecraft/world/level/World.java
+index 63b48cf02..8610cb15f 100644
+--- a/src/main/java/net/minecraft/world/level/World.java
++++ b/src/main/java/net/minecraft/world/level/World.java
+@@ -153,6 +153,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
+     public List<EntityItem> captureDrops;
+     public final it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap<SpawnCategory> ticksPerSpawnCategory = new it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap<>();
+     public boolean populating;
++    public final org.nanaica.NanaicaWorldConfig nanaicaConfig; // Nanaica
+ 
+     public CraftWorld getWorld() {
+         return this.world;
+@@ -165,6 +166,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
+     public abstract ResourceKey<WorldDimension> getTypeKey();
+ 
+     protected World(WorldDataMutable worlddatamutable, ResourceKey<World> resourcekey, IRegistryCustom iregistrycustom, Holder<DimensionManager> holder, Supplier<GameProfilerFiller> supplier, boolean flag, boolean flag1, long i, int j, org.bukkit.generator.ChunkGenerator gen, org.bukkit.generator.BiomeProvider biomeProvider, org.bukkit.World.Environment env) {
++        this.nanaicaConfig = new org.nanaica.NanaicaWorldConfig(((net.minecraft.world.level.storage.WorldDataServer) worlddatamutable).getLevelName()); // Nanaica
+         this.generator = gen;
+         this.world = new CraftWorld((WorldServer) this, gen, biomeProvider, env);
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 14608cefe..dddbf8825 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -903,6 +903,7 @@ public final class CraftServer implements Server {
+             logger.log(Level.WARNING, "Failed to load banned-players.json, " + ex.getMessage());
+         }
+ 
++        org.nanaica.NanaicaConfig.init((File) console.options.valueOf("nanaica-settings")); // Nanaica
+         for (WorldServer world : console.getAllLevels()) {
+             world.serverLevelData.setDifficulty(config.difficulty);
+             world.setSpawnSettings(config.spawnMonsters, config.spawnAnimals);
+@@ -917,11 +918,13 @@ public final class CraftServer implements Server {
+                     }
+                 }
+             }
++            world.nanaicaConfig.init(); // Nanaica
+         }
+ 
+         pluginManager.clearPlugins();
+         commandMap.clearCommands();
+         reloadData();
++        org.nanaica.NanaicaConfig.registerCommands(); // Nanaica
+         overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
+         ignoreVanillaPermissions = commandsConfiguration.getBoolean("ignore-vanilla-permissions");
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
+index f0a2d2e9e..540f786f6 100644
+--- a/src/main/java/org/bukkit/craftbukkit/Main.java
++++ b/src/main/java/org/bukkit/craftbukkit/Main.java
+@@ -133,6 +133,14 @@ public class Main {
+                 acceptsAll(asList("demo"), "Demo mode");
+ 
+                 acceptsAll(asList("initSettings"), "Only create configuration files and then exit"); // NANAICA-5761: Add initSettings option
++
++                // Nanaic Start
++                acceptsAll(asList("S", "nanaica-settings"), "File for nanaica settings")
++                        .withRequiredArg()
++                        .ofType(File.class)
++                        .defaultsTo(new File("spigot.yml"))
++                        .describedAs("Yml file");
++                // Nanaica End
+             }
+         };
+ 
+diff --git a/src/main/java/org/spigotmc/NanaicaCommand.java b/src/main/java/org/nanaica/NanaicaCommand.java
+new file mode 100644
+index 000000000..7443e7334
+--- /dev/null
++++ b/src/main/java/org/nanaica/NanaicCommand.java
+@@ -0,0 +1,44 @@
++package org.nanaica;
++
++import java.io.File;
++import net.minecraft.server.MinecraftServer;
++import net.minecraft.server.level.WorldServer;
++import org.bukkit.ChatColor;
++import org.bukkit.command.Command;
++import org.bukkit.command.CommandSender;
++
++public class NanaicaCommand extends Command {
++
++    public SpigotCommand(String name) {
++        super(name);
++        this.description = "Nanaixa related commands";
++        this.usageMessage = "/nanaica reload";
++        this.setPermission("bukkit.command.nanaica");
++    }
++
++    @Override
++    public boolean execute(CommandSender sender, String commandLabel, String[] args) {
++        if (!testPermission(sender)) return true;
++
++        if (args.length != 1) {
++            sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
++            return false;
++        }
++
++        if (args[0].equals("reload")) {
++            Command.broadcastCommandMessage(sender, ChatColor.RED + "Please note that this command is not supported and may cause issues.");
++            Command.broadcastCommandMessage(sender, ChatColor.RED + "If you encounter any issues please use the "/stop" command or stop the server from the server panel to restart your server.");
++
++            MinecraftServer console = MinecraftServer.getServer();
++            org.nanaica.NanaicaConfig.init((File) console.options.valueOf("nanaica-settings"));
++            for (WorldServer world : console.getAllLevels()) {
++                world.nanaicaConfig.init();
++            }
++            console.server.reloadCount++;
++
++            Command.broadcastCommandMessage(sender, ChatColor.GREEN + "Reload complete.");
++        }
++
++        return true;
++    }
++}
+diff --git a/src/main/java/org/nanaica/NanaicaConfig.java b/src/main/java/org/nanaica/NanaicaConfig.java
+new file mode 100644
+index 000000000..9ee0b4a1e
+--- /dev/null
++++ b/src/main/java/org/nanaica/NanaicaConfig.java
+@@ -0,0 +1,140 @@
++package org.nanaica;
++
++import com.google.common.base.Throwables;
++import java.io.File;
++import java.io.IOException;
++import java.lang.reflect.InvocationTargetException;
++import java.lang.reflect.Method;
++import java.lang.reflect.Modifier;
++import java.util.HashMap;
++import java.util.List;
++import java.util.Map;
++import java.util.logging.Level;
++import net.minecraft.server.MinecraftServer;
++import org.bukkit.Bukkit;
++import org.bukkit.command.Command;
++import org.bukkit.configuration.InvalidConfigurationException;
++import org.bukkit.configuration.file.YamlConfiguration;
++
++public class NanaicaConfig
++{
++
++    private static File CONFIG_FILE;
++    private static final String HEADER = "This is the main configuration file for Nanaica.\n"
++            + "As you can see, there's tons to configure. Some options may impact gameplay, so use\n"
++            + "with caution, and make sure you know what each option does before configuring.\n"
++            + "For a reference for any variable inside this file, check out the Nanaica wiki at\n"
++            + "http://docs.nanaicamc.tk/"
++            + "\n"
++            + "If you need help with the configuration or have any questions related to Nanaica,\n"
++            + "join us at the Discord or drop by our forums and leave a post.\n"
++            + "\n"
++            + "Discord: https://www.nanaicamc.tk/go/discord\n"
++            + "Forums: http://www.nanaicamc.tk/\n";
++    /*========================================================================*/
++    public static YamlConfiguration config;
++    static int version;
++    static Map<String, Command> commands;
++    /*========================================================================*/
++
++    public static void init(File configFile)
++    {
++        CONFIG_FILE = configFile;
++        config = new YamlConfiguration();
++        try
++        {
++            config.load( CONFIG_FILE );
++        } catch ( IOException ex )
++        {
++        } catch ( InvalidConfigurationException ex )
++        {
++            Bukkit.getLogger().log( Level.SEVERE, "Could not load nanaica.yml, please correct your syntax errors", ex );
++            throw Throwables.propagate( ex );
++        }
++
++        config.options().header( HEADER );
++        config.options().copyDefaults( true );
++
++        commands = new HashMap<String, Command>();
++        commands.put( "spigot", new NanaicaCommand( "nanaica" ) );
++
++        version = getInt( "config-version", 12 );
++        set( "config-version", 12 );
++        readConfig( NanaicaConfig.class, null );
++    }
++
++    public static void registerCommands()
++    {
++        for ( Map.Entry<String, Command> entry : commands.entrySet() )
++        {
++            MinecraftServer.getServer().server.getCommandMap().register( entry.getKey(), "Spigot", entry.getValue() );
++        }
++    }
++
++    static void readConfig(Class<?> clazz, Object instance)
++    {
++        for ( Method method : clazz.getDeclaredMethods() )
++        {
++            if ( Modifier.isPrivate( method.getModifiers() ) )
++            {
++                if ( method.getParameterTypes().length == 0 && method.getReturnType() == Void.TYPE )
++                {
++                    try
++                    {
++                        method.setAccessible( true );
++                        method.invoke( instance );
++                    } catch ( InvocationTargetException ex )
++                    {
++                        throw Throwables.propagate( ex.getCause() );
++                    } catch ( Exception ex )
++                    {
++                        Bukkit.getLogger().log( Level.SEVERE, "Error invoking " + method, ex );
++                    }
++                }
++            }
++        }
++
++        try
++        {
++            config.save( CONFIG_FILE );
++        } catch ( IOException ex )
++        {
++            Bukkit.getLogger().log( Level.SEVERE, "Could not save " + CONFIG_FILE, ex );
++        }
++    }
++
++    private static void set(String path, Object val)
++    {
++        config.set( path, val );
++    }
++
++    private static boolean getBoolean(String path, boolean def)
++    {
++        config.addDefault( path, def );
++        return config.getBoolean( path, config.getBoolean( path ) );
++    }
++
++    private static int getInt(String path, int def)
++    {
++        config.addDefault( path, def );
++        return config.getInt( path, config.getInt( path ) );
++    }
++
++    private static <T> List getList(String path, T def)
++    {
++        config.addDefault( path, def );
++        return (List<T>) config.getList( path, config.getList( path ) );
++    }
++
++    private static String getString(String path, String def)
++    {
++        config.addDefault( path, def );
++        return config.getString( path, config.getString( path ) );
++    }
++
++    private static double getDouble(String path, double def)
++    {
++        config.addDefault( path, def );
++        return config.getDouble( path, config.getDouble( path ) );
++    }
++}
+diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/nanaica/NanaicaWorldConfig.java
+new file mode 100644
+index 000000000..1cce14866
+--- /dev/null
++++ b/src/main/java/org/nanaica/NanaicaWorldConfig.java
+@@ -0,0 +1,82 @@
++package org.nanaica;
++
++import java.util.List;
++import org.bukkit.Bukkit;
++import org.bukkit.configuration.file.YamlConfiguration;
++
++public class NanaicaWorldConfig
++{
++
++    private final String worldName;
++    private final YamlConfiguration config;
++    private boolean verbose;
++
++    public SpigotWorldConfig(String worldName)
++    {
++        this.worldName = worldName;
++        this.config = NanaicaConfig.config;
++        init();
++    }
++
++    public void init()
++    {
++        this.verbose = getBoolean( "verbose", true );
++
++        log( "-------- World Settings For [" + worldName + "] --------" );
++        NanaicatConfig.readConfig( NanaicaWorldConfig.class, this );
++    }
++
++    private void log(String s)
++    {
++        if ( verbose )
++        {
++            Bukkit.getLogger().info( s );
++        }
++    }
++
++    private void set(String path, Object val)
++    {
++        config.set( "world-settings.default." + path, val );
++    }
++
++    private boolean getBoolean(String path, boolean def)
++    {
++        config.addDefault( "world-settings.default." + path, def );
++        return config.getBoolean( "world-settings." + worldName + "." + path, config.getBoolean( "world-settings.default." + path ) );
++    }
++
++    private double getDouble(String path, double def)
++    {
++        config.addDefault( "world-settings.default." + path, def );
++        return config.getDouble( "world-settings." + worldName + "." + path, config.getDouble( "world-settings.default." + path ) );
++    }
++
++    private int getInt(String path)
++    {
++        return config.getInt( "world-settings." + worldName + "." + path );
++    }
++
++    private int getInt(String path, int def)
++    {
++        config.addDefault( "world-settings.default." + path, def );
++        return config.getInt( "world-settings." + worldName + "." + path, config.getInt( "world-settings.default." + path ) );
++    }
++
++    private <T> List getList(String path, T def)
++    {
++        config.addDefault( "world-settings.default." + path, def );
++        return (List<T>) config.getList( "world-settings." + worldName + "." + path, config.getList( "world-settings.default." + path ) );
++    }
++
++    private String getString(String path, String def)
++    {
++        config.addDefault( "world-settings.default." + path, def );
++        return config.getString( "world-settings." + worldName + "." + path, config.getString( "world-settings.default." + path ) );
++    }
++
++    private Object get(String path, Object def)
++    {
++        config.addDefault( "world-settings.default." + path, def );
++        return config.get( "world-settings." + worldName + "." + path, config.get( "world-settings.default." + path ) );
++    }
++}
+-- 
+1.0.0
